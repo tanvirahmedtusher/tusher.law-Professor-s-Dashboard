@@ -13,9 +13,9 @@ const DEFAULT_PROFILE_DATA = {
   location: "Maijdee, Noakhali, Bangladesh",
   email: "tusher.law@gmail.com",
   links: {
-    linkedin: "https://www.linkedin.com/in/tanvir-ahmed-tusher",
-    orcid: "https://orcid.org",
-    googleScholar: "https://scholar.google.com"
+    linkedin: "https://www.linkedin.com/in/tanvir-ahmed77",
+    orcid: "https://orcid.org/0009-0001-1764-9178",
+    googleScholar: "https://scholar.google.com/citations?user=t9cr7sQAAAAJ&hl=en&authuser=3"
   },
   
   researchAreas: [

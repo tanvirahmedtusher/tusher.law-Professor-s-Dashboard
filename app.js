@@ -20,7 +20,24 @@ const State = {
   stages: JSON.parse(localStorage.getItem('pstage') || '{}'),
   followups: JSON.parse(localStorage.getItem('pfollowup') || '{}'),
   activity: JSON.parse(localStorage.getItem('pactivity') || '[]'),
-  profile: JSON.parse(localStorage.getItem('profileData') || 'null') || (typeof DEFAULT_PROFILE_DATA !== 'undefined' ? DEFAULT_PROFILE_DATA : {}),
+  profile: (function() {
+    let p = JSON.parse(localStorage.getItem('profileData') || 'null');
+    if (!p && typeof DEFAULT_PROFILE_DATA !== 'undefined') {
+      p = JSON.parse(JSON.stringify(DEFAULT_PROFILE_DATA));
+    }
+    if (p && p.links) {
+      if (!p.links.orcid || p.links.orcid === 'https://orcid.org') {
+        p.links.orcid = 'https://orcid.org/0009-0001-1764-9178';
+      }
+      if (!p.links.linkedin || p.links.linkedin === 'https://www.linkedin.com/in/tanvir-ahmed-tusher') {
+        p.links.linkedin = 'https://www.linkedin.com/in/tanvir-ahmed77';
+      }
+      if (!p.links.googleScholar || p.links.googleScholar === 'https://scholar.google.com') {
+        p.links.googleScholar = 'https://scholar.google.com/citations?user=t9cr7sQAAAAJ&hl=en&authuser=3';
+      }
+    }
+    return p || (typeof DEFAULT_PROFILE_DATA !== 'undefined' ? DEFAULT_PROFILE_DATA : {});
+  })(),
   profilePhoto: localStorage.getItem('profilePhoto') || 'tusher-profile-photo.png',
   
   // Active Drawer Scholar ID
@@ -1610,6 +1627,16 @@ function renderProfile() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
               <span>Change Photo</span>
             </button>
+
+            <button class="btn btn-secondary" onclick="exportProfileMarkdown()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Download CV (.md)</span>
+            </button>
+            
+            <button class="btn btn-secondary" onclick="exportProfilePDF()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span>Download / Print PDF</span>
+            </button>
           ` : `
             <button class="btn btn-secondary" onclick="openProfileEditModal()" title="Owner Authentication Required">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -1620,17 +1647,17 @@ function renderProfile() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
               <span>🔒 Change Photo</span>
             </button>
+
+            <button class="btn btn-secondary" onclick="exportProfileMarkdown()" title="Owner Authentication Required to Download CV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>🔒 Download CV (.md)</span>
+            </button>
+
+            <button class="btn btn-secondary" onclick="exportProfilePDF()" title="Owner Authentication Required to Download / Print CV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>🔒 Download / Print PDF</span>
+            </button>
           `}
-          
-          <button class="btn btn-secondary" onclick="exportProfileMarkdown()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>Download CV (.md)</span>
-          </button>
-          
-          <button class="btn btn-secondary" onclick="window.print()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-            <span>Print CV</span>
-          </button>
         </div>
       </div>
     </div>
@@ -2058,13 +2085,18 @@ function openProfileEditModal() {
 
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label">LinkedIn URL</label>
+        <label class="form-label">LinkedIn Profile URL</label>
         <input type="text" id="edit-p-linkedin" class="form-input" value="${esc((p.links && p.links.linkedin) || '')}">
       </div>
       <div class="form-group">
-        <label class="form-label">Google Scholar URL</label>
-        <input type="text" id="edit-p-scholar" class="form-input" value="${esc((p.links && p.links.googleScholar) || '')}">
+        <label class="form-label">ORCID Record URL</label>
+        <input type="text" id="edit-p-orcid" class="form-input" value="${esc((p.links && p.links.orcid) || '')}">
       </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Google Scholar Profile URL</label>
+      <input type="text" id="edit-p-scholar" class="form-input" value="${esc((p.links && p.links.googleScholar) || '')}">
     </div>
 
     <div class="form-group">
@@ -2118,6 +2150,7 @@ function saveProfileEdits() {
   
   if (!p.links) p.links = {};
   p.links.linkedin = document.getElementById('edit-p-linkedin').value.trim();
+  p.links.orcid = (document.getElementById('edit-p-orcid')?.value || '').trim();
   p.links.googleScholar = document.getElementById('edit-p-scholar').value.trim();
   
   const rAreas = document.getElementById('edit-p-research').value.split('\n').map(s => s.trim()).filter(Boolean);
@@ -2155,13 +2188,28 @@ function resetProfileToDefaults() {
   }
 }
 
-// Download Structured Markdown CV
+// Download Structured Markdown CV (Protected with Owner Authentication)
 function exportProfileMarkdown() {
+  if (!isOwnerAuthenticated()) {
+    openOwnerAuthModal(() => {
+      exportProfileMarkdown();
+    });
+    return;
+  }
+
   const p = State.profile || (typeof DEFAULT_PROFILE_DATA !== 'undefined' ? DEFAULT_PROFILE_DATA : {});
   
   let md = `# ${p.name || 'TANVIR AHMED TUSHER'}\n\n`;
-  md += `${p.location || 'Maijdee, Noakhali, Bangladesh'} | ${p.institution || 'Noakhali Science and Technology University'}\n`;
-  md += `Email: ${p.email || 'tusher.law@gmail.com'}\n\n`;
+  md += `${p.location || 'Maijdee, Noakhali, Bangladesh'} | ${p.institution || 'Noakhali Science and Technology University'}\n\n`;
+  
+  let contactLinks = [];
+  if (p.email) contactLinks.push(`Email: [${p.email}](mailto:${p.email})`);
+  if (p.links && p.links.linkedin) contactLinks.push(`[LinkedIn](${p.links.linkedin})`);
+  if (p.links && p.links.orcid) contactLinks.push(`[ORCID](${p.links.orcid})`);
+  if (p.links && p.links.googleScholar) contactLinks.push(`[Google Scholar](${p.links.googleScholar})`);
+  if (contactLinks.length > 0) {
+    md += `${contactLinks.join(' | ')}\n\n`;
+  }
   
   md += `## Profile & Research Statement\n\n${p.tagline || ''}\n\n`;
   
@@ -2172,6 +2220,38 @@ function exportProfileMarkdown() {
   md += `### Research Area(s)\n\n`;
   (p.researchAreas || []).forEach(ra => { md += `- ${ra}\n`; });
   md += `\n`;
+
+  if (p.highlights && p.highlights.length > 0) {
+    md += `## Key Highlights & Accolades\n\n`;
+    p.highlights.forEach(h => {
+      md += `- **${h.title}:** ${h.detail}\n`;
+    });
+    md += `\n`;
+  }
+
+  if (p.relevantCourses) {
+    md += `## Relevant Courses & Sessions\n\n`;
+    if (p.relevantCourses.undergraduate && p.relevantCourses.undergraduate.length > 0) {
+      md += `### Undergraduate Courses\n`;
+      p.relevantCourses.undergraduate.forEach(c => { md += `- ${c}\n`; });
+      md += `\n`;
+    }
+    if (p.relevantCourses.esdrSessions && p.relevantCourses.esdrSessions.length > 0) {
+      md += `### 17th International Residential School on ESDR\n`;
+      p.relevantCourses.esdrSessions.forEach(s => {
+        md += `- **${s.title}** — ${s.instructor} (*${s.affiliation}*)\n`;
+      });
+      md += `\n`;
+    }
+  }
+
+  if (p.leadership && p.leadership.length > 0) {
+    md += `## Mooting, Leadership & Service\n\n`;
+    p.leadership.forEach(l => {
+      md += `- **${l.role}** (${l.years || ''}) — ${l.org}: ${l.detail}\n`;
+    });
+    md += `\n`;
+  }
   
   md += `## Publications & Book Chapters\n\n`;
   (p.publications || []).forEach(pub => {
@@ -2226,6 +2306,24 @@ function exportProfileMarkdown() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('Downloaded Tanvir_Ahmed_Tusher_CV.md');
+  showToast('📄 Downloaded Tanvir_Ahmed_Tusher_CV.md');
+}
+
+// Download / Print PDF CV (Protected with Owner Authentication)
+function exportProfilePDF() {
+  if (!isOwnerAuthenticated()) {
+    openOwnerAuthModal(() => {
+      exportProfilePDF();
+    });
+    return;
+  }
+  
+  if (State.currentView !== 'profile') {
+    switchView('profile');
+  }
+  showToast('🖨️ Opening print / PDF save dialog...', '✓');
+  setTimeout(() => {
+    window.print();
+  }, 250);
 }
 
