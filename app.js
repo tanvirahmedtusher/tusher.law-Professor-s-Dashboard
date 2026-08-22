@@ -131,10 +131,20 @@ function getFilteredScholars() {
 function switchView(viewName) {
   State.currentView = viewName;
   
-  // Update Nav highlighting
+  // Update Nav highlighting (Desktop Sidebar)
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === viewName);
   });
+
+  // Update Nav highlighting (Mobile Bottom Navigation Bar)
+  document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === viewName);
+  });
+  
+  // Close mobile sidebar and search overlay if open
+  closeMobileSidebar();
+  const searchWrap = document.getElementById('topbar-search-wrap');
+  if (searchWrap) searchWrap.classList.remove('mobile-active');
   
   // Update Topbar View Title
   const titles = {
@@ -148,8 +158,10 @@ function switchView(viewName) {
   };
   
   const vMeta = titles[viewName] || { title: 'Dashboard', breadcrumb: 'Overview' };
-  document.getElementById('topbar-view-title').textContent = vMeta.title;
-  document.getElementById('topbar-breadcrumb').textContent = vMeta.breadcrumb;
+  const titleEl = document.getElementById('topbar-view-title');
+  const crumbEl = document.getElementById('topbar-breadcrumb');
+  if (titleEl) titleEl.textContent = vMeta.title;
+  if (crumbEl) crumbEl.textContent = vMeta.breadcrumb;
   
   // Toggle View Sections
   document.querySelectorAll('.view-section').forEach(sec => {
@@ -714,12 +726,27 @@ function collapseAllCards() {
 function renderPipeline() {
   const container = document.getElementById('pipeline-kanban-board');
   if (!container) return;
+
+  // Render Mobile Tabs
+  const mobileTabsContainer = document.getElementById('pipeline-mobile-tabs');
+  if (mobileTabsContainer) {
+    mobileTabsContainer.innerHTML = STAGES.map((stg, idx) => {
+      const stageProfs = P.filter(p => (State.stages[p.id] || 'not_contacted') === stg.id);
+      return `
+        <button class="p-tab-btn ${idx === 0 ? 'active' : ''}" data-stage="${stg.id}" onclick="scrollKanbanToStage('${stg.id}')">
+          <span class="col-indicator indicator-${stg.id}" style="width:7px;height:7px;"></span>
+          <span>${esc(stg.label)}</span>
+          <span class="p-tab-count">${stageProfs.length}</span>
+        </button>
+      `;
+    }).join('');
+  }
   
   container.innerHTML = STAGES.map(stg => {
     const stageProfs = P.filter(p => (State.stages[p.id] || 'not_contacted') === stg.id);
     
     return `
-      <div class="kanban-column" ondragover="handleDragOver(event)" ondrop="handleDrop(event, '${stg.id}')">
+      <div class="kanban-column" id="kanban-col-${stg.id}" ondragover="handleDragOver(event)" ondrop="handleDrop(event, '${stg.id}')">
         <div class="kanban-col-header">
           <div class="col-header-left">
             <span class="col-indicator indicator-${stg.id}"></span>
@@ -729,7 +756,9 @@ function renderPipeline() {
         </div>
         
         <div class="kanban-cards-list">
-          ${stageProfs.map(p => {
+          ${stageProfs.length === 0 ? `
+            <div style="text-align:center;padding:2rem 1rem;color:var(--text-muted);font-size:0.75rem;">No scholars in this stage</div>
+          ` : stageProfs.map(p => {
             const followup = State.followups[p.id];
             return `
               <div class="kanban-card" draggable="true" ondragstart="handleDragStart(event, ${p.id})" onclick="openDrawer(${p.id})">
@@ -753,7 +782,7 @@ function renderPipeline() {
                 ` : ''}
                 
                 <div class="k-footer" onclick="event.stopPropagation()">
-                  <select class="custom-select" style="font-size:0.65rem;padding:0.15rem 0.4rem;" onchange="setStage(${p.id}, this.value, event)">
+                  <select class="custom-select" style="font-size:0.68rem;padding:0.2rem 0.45rem;" onchange="setStage(${p.id}, this.value, event)">
                     ${STAGES.map(s => `<option value="${s.id}" ${s.id === stg.id ? 'selected' : ''}>${s.label}</option>`).join('')}
                   </select>
                   <button class="k-move-btn" onclick="openDrawer(${p.id}, event)">Detail ↗</button>
@@ -765,6 +794,16 @@ function renderPipeline() {
       </div>
     `;
   }).join('');
+}
+
+function scrollKanbanToStage(stageId) {
+  document.querySelectorAll('.p-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.stage === stageId);
+  });
+  const col = document.getElementById(`kanban-col-${stageId}`);
+  if (col) {
+    col.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
 }
 
 // Drag and Drop
@@ -1051,6 +1090,10 @@ function openDrawer(id, event) {
   State.activeDrawerId = id;
   renderDrawerContent(id);
   
+  closeMobileSidebar();
+  const searchWrap = document.getElementById('topbar-search-wrap');
+  if (searchWrap) searchWrap.classList.remove('mobile-active');
+
   document.getElementById('profile-drawer-backdrop').classList.add('open');
   document.getElementById('profile-drawer').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1313,6 +1356,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (e.key === 'Escape') {
       closeDrawer();
+      closeProfileEditModal();
+      closeMobileSidebar();
+      const sWrap = document.getElementById('topbar-search-wrap');
+      if (sWrap) sWrap.classList.remove('mobile-active');
     }
   });
   
@@ -1335,10 +1382,31 @@ function setViewMode(mode) {
   renderScholars();
 }
 
-// Mobile sidebar toggle
+// Mobile sidebar toggle & close
 function toggleMobileSidebar() {
   const sidebar = document.getElementById('app-sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
   if (sidebar) sidebar.classList.toggle('open');
+  if (backdrop) backdrop.classList.toggle('open');
+}
+
+function closeMobileSidebar() {
+  const sidebar = document.getElementById('app-sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  if (sidebar) sidebar.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('open');
+}
+
+// Mobile search toggle
+function toggleMobileSearch() {
+  const searchWrap = document.getElementById('topbar-search-wrap');
+  const searchInput = document.getElementById('global-search-input');
+  if (searchWrap) {
+    searchWrap.classList.toggle('mobile-active');
+    if (searchWrap.classList.contains('mobile-active') && searchInput) {
+      searchInput.focus();
+    }
+  }
 }
 
 // ==========================================================================
@@ -1789,6 +1857,10 @@ function handlePhotoUpload(e) {
 
 // Profile Edit Modal Controls
 function openProfileEditModal() {
+  closeMobileSidebar();
+  const searchWrap = document.getElementById('topbar-search-wrap');
+  if (searchWrap) searchWrap.classList.remove('mobile-active');
+
   const p = State.profile || (typeof DEFAULT_PROFILE_DATA !== 'undefined' ? DEFAULT_PROFILE_DATA : {});
   const body = document.getElementById('profile-edit-modal-body');
   if (!body) return;
