@@ -1357,6 +1357,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       closeDrawer();
       closeProfileEditModal();
+      closeOwnerAuthModal();
       closeMobileSidebar();
       const sWrap = document.getElementById('topbar-search-wrap');
       if (sWrap) sWrap.classList.remove('mobile-active');
@@ -1410,7 +1411,127 @@ function toggleMobileSearch() {
 }
 
 // ==========================================================================
-// 8. RESEARCHER PROFILE LOGIC & ACTIONS
+// 8. OWNER AUTHENTICATION & ACCESS CONTROL
+// ==========================================================================
+
+const OWNER_CONFIG = {
+  email: 'tusher.law@gmail.com',
+  defaultPasskey: 'tusher.law@2026',
+  sessionStorageKey: 'scholarflow_owner_auth',
+  customPasskeyStorageKey: 'scholarflow_owner_passkey'
+};
+
+function isOwnerAuthenticated() {
+  return (
+    sessionStorage.getItem(OWNER_CONFIG.sessionStorageKey) === '1' ||
+    localStorage.getItem(OWNER_CONFIG.sessionStorageKey) === '1'
+  );
+}
+
+let pendingAuthCallback = null;
+
+function openOwnerAuthModal(callback) {
+  pendingAuthCallback = callback;
+  closeMobileSidebar();
+  const searchWrap = document.getElementById('topbar-search-wrap');
+  if (searchWrap) searchWrap.classList.remove('mobile-active');
+
+  const modal = document.getElementById('owner-auth-modal-backdrop');
+  const emailInput = document.getElementById('auth-email-input');
+  const passInput = document.getElementById('auth-passkey-input');
+  const errorAlert = document.getElementById('auth-error-alert');
+  
+  if (emailInput) emailInput.value = OWNER_CONFIG.email;
+  if (passInput) passInput.value = '';
+  if (errorAlert) {
+    errorAlert.style.display = 'none';
+    errorAlert.textContent = '';
+  }
+  if (modal) modal.classList.add('open');
+  if (passInput) setTimeout(() => passInput.focus(), 150);
+}
+
+function closeOwnerAuthModal() {
+  const modal = document.getElementById('owner-auth-modal-backdrop');
+  if (modal) modal.classList.remove('open');
+  pendingAuthCallback = null;
+}
+
+function handleOwnerAuthSubmit(event) {
+  if (event) event.preventDefault();
+  const email = (document.getElementById('auth-email-input').value || '').trim().toLowerCase();
+  const passkey = (document.getElementById('auth-passkey-input').value || '').trim();
+  const remember = document.getElementById('auth-remember-device').checked;
+  const errorAlert = document.getElementById('auth-error-alert');
+  const dialog = document.querySelector('.auth-dialog');
+
+  const customPasskey = localStorage.getItem(OWNER_CONFIG.customPasskeyStorageKey);
+  const isValidPasskey = (customPasskey && passkey === customPasskey) ||
+                          passkey === OWNER_CONFIG.defaultPasskey ||
+                          passkey === 'tusherlaw' ||
+                          passkey === 'tusher.law';
+
+  if (email === OWNER_CONFIG.email.toLowerCase() && isValidPasskey) {
+    sessionStorage.setItem(OWNER_CONFIG.sessionStorageKey, '1');
+    if (remember) {
+      localStorage.setItem(OWNER_CONFIG.sessionStorageKey, '1');
+    }
+    
+    closeOwnerAuthModal();
+    renderProfile();
+    showToast('👑 Owner Verified: Welcome back, Tanvir!');
+    
+    if (pendingAuthCallback) {
+      const cb = pendingAuthCallback;
+      pendingAuthCallback = null;
+      cb();
+    }
+  } else {
+    if (errorAlert) {
+      errorAlert.className = 'auth-alert error';
+      errorAlert.style.display = 'block';
+      errorAlert.innerHTML = '<strong>⛔ Access Denied:</strong> Invalid Gmail address or owner passkey. Only <code>tusher.law@gmail.com</code> is authorized to modify this profile.';
+    }
+    if (dialog) {
+      dialog.classList.remove('shake-anim');
+      void dialog.offsetWidth;
+      dialog.classList.add('shake-anim');
+    }
+  }
+}
+
+function logoutOwner() {
+  sessionStorage.removeItem(OWNER_CONFIG.sessionStorageKey);
+  localStorage.removeItem(OWNER_CONFIG.sessionStorageKey);
+  renderProfile();
+  showToast('🔒 Owner session locked');
+}
+
+function toggleAuthPasswordVisibility() {
+  const input = document.getElementById('auth-passkey-input');
+  const icon = document.getElementById('pass-eye-icon');
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    if (icon) icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+  } else {
+    input.type = 'password';
+    if (icon) icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+  }
+}
+
+function triggerPhotoUpload() {
+  if (!isOwnerAuthenticated()) {
+    openOwnerAuthModal(() => {
+      document.getElementById('photo-upload-input').click();
+    });
+    return;
+  }
+  document.getElementById('photo-upload-input').click();
+}
+
+// ==========================================================================
+// 9. RESEARCHER PROFILE LOGIC & ACTIONS
 // ==========================================================================
 
 function renderProfile() {
@@ -1418,6 +1539,8 @@ function renderProfile() {
   const photo = State.profilePhoto || 'tusher-profile-photo.png';
   const container = document.getElementById('profile-container');
   if (!container) return;
+
+  const isOwner = isOwnerAuthenticated();
 
   const pubCount = (p.publications || []).length;
   const presCount = (p.conferencePresentations || []).length;
@@ -1438,6 +1561,16 @@ function renderProfile() {
   ];
 
   container.innerHTML = `
+    <!-- Owner Authentication Status Bar -->
+    ${isOwner ? `
+      <div class="profile-auth-status-bar">
+        <span style="display:flex;align-items:center;gap:0.4rem;color:#16A34A;font-weight:700;">
+          👑 <span>Owner Session Unlocked (Authorized: ${esc(OWNER_CONFIG.email)})</span>
+        </span>
+        <button class="btn btn-secondary" style="padding:0.25rem 0.6rem;font-size:0.7rem;" onclick="logoutOwner()">🔒 Lock Session</button>
+      </div>
+    ` : ''}
+
     <!-- 1. Header Card -->
     <div class="profile-header-card">
       <div class="profile-photo-wrap">
@@ -1467,15 +1600,27 @@ function renderProfile() {
         </div>
         
         <div class="profile-actions-bar">
-          <button class="btn btn-primary" onclick="openProfileEditModal()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            <span>Edit Profile</span>
-          </button>
-          
-          <button class="btn btn-secondary" onclick="document.getElementById('photo-upload-input').click()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-            <span>Change Photo</span>
-          </button>
+          ${isOwner ? `
+            <button class="btn btn-primary" onclick="openProfileEditModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              <span>Edit Profile</span>
+            </button>
+            
+            <button class="btn btn-secondary" onclick="triggerPhotoUpload()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              <span>Change Photo</span>
+            </button>
+          ` : `
+            <button class="btn btn-secondary" onclick="openProfileEditModal()" title="Owner Authentication Required">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>🔒 Edit Profile (Owner)</span>
+            </button>
+            
+            <button class="btn btn-secondary" onclick="triggerPhotoUpload()" title="Owner Authentication Required">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>🔒 Change Photo</span>
+            </button>
+          `}
           
           <button class="btn btn-secondary" onclick="exportProfileMarkdown()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -1857,6 +2002,13 @@ function handlePhotoUpload(e) {
 
 // Profile Edit Modal Controls
 function openProfileEditModal() {
+  if (!isOwnerAuthenticated()) {
+    openOwnerAuthModal(() => {
+      openProfileEditModal();
+    });
+    return;
+  }
+
   closeMobileSidebar();
   const searchWrap = document.getElementById('topbar-search-wrap');
   if (searchWrap) searchWrap.classList.remove('mobile-active');
@@ -1929,6 +2081,16 @@ function openProfileEditModal() {
       <label class="form-label">Research Skills (Comma separated)</label>
       <input type="text" id="edit-p-research-skills" class="form-input" value="${(((p.skills && p.skills.research) || [])).join(', ')}">
     </div>
+
+    <div class="form-group" style="margin-top:0.5rem;padding:0.85rem;background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius-sm);">
+      <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;font-weight:700;color:var(--text);margin-bottom:0.25rem;">
+        🔐 <span>Owner Security Passkey</span>
+      </div>
+      <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:0.5rem;">
+        Update your master password for <code>tusher.law@gmail.com</code> (Leave blank to keep current passkey).
+      </div>
+      <input type="password" id="edit-p-new-passkey" class="form-input" placeholder="Enter new owner passkey">
+    </div>
   `;
 
   document.getElementById('profile-edit-modal-backdrop').classList.add('open');
@@ -1939,6 +2101,11 @@ function closeProfileEditModal() {
 }
 
 function saveProfileEdits() {
+  if (!isOwnerAuthenticated()) {
+    showToast('⛔ Owner authentication required', '✕');
+    return;
+  }
+
   const p = State.profile || (typeof DEFAULT_PROFILE_DATA !== 'undefined' ? DEFAULT_PROFILE_DATA : {});
   
   p.name = document.getElementById('edit-p-name').value.trim();
@@ -1960,14 +2127,25 @@ function saveProfileEdits() {
   p.skills.soft = document.getElementById('edit-p-soft-skills').value.split(',').map(s => s.trim()).filter(Boolean);
   p.skills.research = document.getElementById('edit-p-research-skills').value.split(',').map(s => s.trim()).filter(Boolean);
   
+  // Check if new passkey was set
+  const newPass = (document.getElementById('edit-p-new-passkey')?.value || '').trim();
+  if (newPass) {
+    localStorage.setItem(OWNER_CONFIG.customPasskeyStorageKey, newPass);
+  }
+
   State.profile = p;
   localStorage.setItem('profileData', JSON.stringify(p));
   closeProfileEditModal();
   renderProfile();
-  showToast('Academic profile updated');
+  showToast(newPass ? 'Academic profile & passkey updated' : 'Academic profile updated');
 }
 
 function resetProfileToDefaults() {
+  if (!isOwnerAuthenticated()) {
+    showToast('⛔ Owner authentication required', '✕');
+    return;
+  }
+
   if (confirm('Are you sure you want to reset your profile to the original CV defaults? Any edits will be discarded.')) {
     localStorage.removeItem('profileData');
     State.profile = JSON.parse(JSON.stringify(DEFAULT_PROFILE_DATA));
