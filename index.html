@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scholar Research &amp; Outreach Ecosystem</title>
+  <meta name="description" content="Unified SaaS dashboard for academic outreach, research alignment, pipeline stages, and scholar intelligence.">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-shell">
+    
+    <!-- ====================================================================
+         1. PERSISTENT LEFT SIDEBAR
+         ==================================================================== -->
+    <aside class="app-sidebar" id="app-sidebar">
+      
+      <!-- Brand Logo & Header -->
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <span class="brand-name">ScholarFlow</span>
+          <span class="brand-subtitle">Research Ecosystem</span>
+        </div>
+      </div>
+      
+      <!-- Navigation Items -->
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="overview" onclick="switchView('overview')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Overview</span>
+        </button>
+        
+        <button class="nav-item" data-view="scholars" onclick="switchView('scholars')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>Scholars</span>
+          <span class="nav-badge">214</span>
+        </button>
+        
+        <button class="nav-item" data-view="pipeline" onclick="switchView('pipeline')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+            <line x1="15" y1="3" x2="15" y2="21"></line>
+          </svg>
+          <span>Pipeline</span>
+        </button>
+        
+        <button class="nav-item" data-view="clusters" onclick="switchView('clusters')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <span>Clusters</span>
+          <span class="nav-badge">8</span>
+        </button>
+        
+        <button class="nav-item" data-view="priority" onclick="switchView('priority')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Priority Targets</span>
+          <span class="nav-badge" style="background:var(--gold-bg);color:var(--gold);">9</span>
+        </button>
+        
+        <button class="nav-item" data-view="analytics" onclick="switchView('analytics')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Analytics</span>
+        </button>
+        
+        <div class="sidebar-divider"></div>
+        
+        <button class="nav-item" data-view="profile" onclick="switchView('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Profile</span>
+          <span class="nav-badge" style="background:var(--primary-light);color:var(--primary);">CV</span>
+        </button>
+      </nav>
+      
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="footer-stat">
+          <span class="status-dot"></span>
+          <span>214 Scholars &middot; QS #1–#220</span>
+        </div>
+        <div class="footer-credit">Tanvir Ahmed Tusher &middot; LL.B.</div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         2. MAIN APP CONTENT & TOPBAR
+         ==================================================================== -->
+    <main class="app-main">
+      
+      <!-- Top Bar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleMobileSidebar()" aria-label="Toggle Navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          
+          <div class="view-title-wrap">
+            <h1 class="view-title" id="topbar-view-title">Overview</h1>
+            <span class="view-breadcrumb" id="topbar-breadcrumb">Dashboard / Ecosystem Metrics</span>
+          </div>
+          
+          <!-- Global Search with Cmd/Ctrl+K -->
+          <div class="topbar-search">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="global-search-input" placeholder="Search scholars, universities, topics..." autocomplete="off">
+            <span class="search-kbd">⌘K</span>
+          </div>
+        </div>
+        
+        <div class="topbar-right">
+          <div class="topbar-date" id="topbar-date-display">Aug 22, 2026</div>
+          
+          <button class="icon-btn" onclick="switchView('overview')" aria-label="Recent Activity">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="badge-dot"></span>
+          </button>
+          
+          <div class="user-avatar" id="topbar-avatar" onclick="switchView('profile')" title="Tanvir Ahmed Tusher (View Profile)">
+            <img id="topbar-avatar-img" src="tusher-avatar.png" alt="Tanvir Ahmed Tusher" />
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Container -->
+      <div class="app-content">
+        
+        <!-- ─── 1. OVERVIEW VIEW ────────────────────────────────────── -->
+        <section id="view-overview" class="view-section active">
+          <div class="overview-grid">
+            
+            <!-- Row of KPI Stat Cards -->
+            <div class="kpi-row">
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span class="kpi-label">Total Scholars</span>
+                  <div class="kpi-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                  </div>
+                </div>
+                <div class="kpi-value" id="kpi-total-scholars">214</div>
+                <div class="kpi-sub positive">
+                  <span>100% verified directory</span>
+                </div>
+              </div>
+              
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span class="kpi-label">Top Priority Targets</span>
+                  <div class="kpi-icon-wrap" style="background:var(--gold-bg);color:var(--gold);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  </div>
+                </div>
+                <div class="kpi-value" id="kpi-top-targets">9</div>
+                <div class="kpi-sub">
+                  <span>5 Super Standouts &middot; 4 Tier 1</span>
+                </div>
+              </div>
+              
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span class="kpi-label">Universities</span>
+                  <div class="kpi-icon-wrap" style="background:var(--cyan-light);color:var(--cyan);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 7V3h12v4M10 11v2M14 11v2M10 16v2M14 16v2"/></svg>
+                  </div>
+                </div>
+                <div class="kpi-value" id="kpi-unis">115</div>
+                <div class="kpi-sub positive" id="kpi-unis-sub">
+                  <span>QS #1 to #220</span>
+                </div>
+              </div>
+              
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span class="kpi-label">Countries</span>
+                  <div class="kpi-icon-wrap" style="background:var(--teal-light);color:var(--teal);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                  </div>
+                </div>
+                <div class="kpi-value" id="kpi-countries">24</div>
+                <div class="kpi-sub">
+                  <span>UK, USA, EU, Aus, Asia</span>
+                </div>
+              </div>
+              
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span class="kpi-label">Contacted Progress</span>
+                  <div class="kpi-icon-wrap" style="background:var(--green-light);color:var(--green);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                </div>
+                <div class="kpi-value" id="kpi-contacted-count">0 (0%)</div>
+                <div class="kpi-sub positive">
+                  <span>Tracked in localStorage</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Section: Tier-by-Tier Engagement Coverage Meters -->
+            <div class="card-box" style="padding: 1.25rem 1.5rem;">
+              <div class="card-box-header" style="margin-bottom: 1rem;">
+                <div>
+                  <div class="card-box-title">Tier-by-Tier Engagement Coverage Meters</div>
+                  <div class="card-box-subtitle">Visual coverage meters across Super Standouts, Tier 1, Tier 2, Tier 3, and Total Ecosystem</div>
+                </div>
+                <span class="tag tag-qs">Interactive Gauges</span>
+              </div>
+              
+              <div class="tier-meters-grid" id="overview-tier-meters">
+                <!-- Injected by app.js -->
+              </div>
+            </div>
+            
+            <!-- Visualizations Row: Activity Chart -->
+            <div class="overview-charts-grid" style="grid-template-columns: 1fr;">
+              
+              <!-- Weekly Bar Chart -->
+              <div class="card-box">
+                <div class="card-box-header">
+                  <div>
+                    <div class="card-box-title">Weekly Outreach Activity</div>
+                    <div class="card-box-subtitle">Daily interactions and scholar status transitions</div>
+                  </div>
+                  <span class="tag tag-qs">Live Events</span>
+                </div>
+                <div class="bar-chart-container" id="weekly-bar-chart">
+                  <!-- Injected by app.js -->
+                </div>
+              </div>
+              
+            </div>
+            
+            <!-- Bottom Row: Activity Feed + Follow-ups -->
+            <div class="overview-bottom-grid">
+              
+              <div class="card-box">
+                <div class="card-box-header">
+                  <div>
+                    <div class="card-box-title">Recent Activity Feed</div>
+                    <div class="card-box-subtitle">Real-time log of outreach actions</div>
+                  </div>
+                  <button class="btn-action" onclick="switchView('pipeline')">Pipeline &rarr;</button>
+                </div>
+                <div class="activity-feed" id="overview-activity-feed">
+                  <!-- Injected by app.js -->
+                </div>
+              </div>
+              
+              <div class="card-box">
+                <div class="card-box-header">
+                  <div>
+                    <div class="card-box-title">Scheduled Follow-ups</div>
+                    <div class="card-box-subtitle">Upcoming reminders and critical response dates</div>
+                  </div>
+                </div>
+                <div class="activity-feed" id="overview-followups-feed">
+                  <!-- Injected by app.js -->
+                </div>
+              </div>
+              
+            </div>
+            
+          </div>
+        </section>
+
+        <!-- ─── 2. SCHOLARS DIRECTORY VIEW ─────────────────────────── -->
+        <section id="view-scholars" class="view-section">
+          
+          <div class="scholars-toolbar">
+            
+            <!-- Cluster Pill Chips -->
+            <div class="chips-row" id="scholars-cluster-chips">
+              <!-- Injected by app.js -->
+            </div>
+            
+            <!-- Filters & Controls Bar -->
+            <div class="filters-controls-row">
+              <div class="filters-group">
+                
+                <div class="filter-select-wrap">
+                  <span class="filter-label">Priority:</span>
+                  <select class="custom-select" id="filter-priority-select" onchange="State.selectedPriority=this.value;renderScholars();">
+                    <option value="all">All Priorities</option>
+                    <option value="Super Standout">Super Standout</option>
+                    <option value="Tier 1">Tier 1</option>
+                    <option value="Tier 2">Tier 2</option>
+                    <option value="Tier 3">Tier 3</option>
+                  </select>
+                </div>
+                
+                <div class="filter-select-wrap">
+                  <span class="filter-label">Country:</span>
+                  <select class="custom-select" id="filter-country-select" onchange="State.selectedCountry=this.value;renderScholars();">
+                    <option value="all">All Countries</option>
+                  </select>
+                </div>
+                
+                <div class="filter-select-wrap">
+                  <span class="filter-label">Category:</span>
+                  <select class="custom-select" id="filter-category-select" onchange="State.selectedCategory=this.value;renderScholars();">
+                    <option value="all">All Levels</option>
+                    <option value="Senior">Senior (Prof/Assoc)</option>
+                    <option value="Junior">Junior (Asst/Lecturer)</option>
+                  </select>
+                </div>
+                
+                <div class="filter-select-wrap">
+                  <span class="filter-label">Sort:</span>
+                  <select class="custom-select" id="filter-sort-select" onchange="State.selectedSort=this.value;renderScholars();">
+                    <option value="priority">Priority Rank</option>
+                    <option value="name">Name (A &rarr; Z)</option>
+                    <option value="name-desc">Name (Z &rarr; A)</option>
+                    <option value="university">University</option>
+                    <option value="qs">QS World Rank</option>
+                    <option value="cluster">Research Cluster</option>
+                  </select>
+                </div>
+                
+              </div>
+              
+              <div class="view-actions-group">
+                <span class="results-count-text" id="scholars-result-count">214 scholars</span>
+                
+                <div class="view-mode-toggle">
+                  <button class="mode-btn active" data-mode="cards" onclick="setViewMode('cards')">Cards</button>
+                  <button class="mode-btn" data-mode="table" onclick="setViewMode('table')">Table</button>
+                  <button class="mode-btn" data-mode="list" onclick="setViewMode('list')">List</button>
+                </div>
+                
+                <button class="btn btn-secondary" onclick="exportCSV()" title="Download CSV of filtered scholars">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  <span>Export CSV</span>
+                </button>
+                
+                <button class="btn btn-secondary" onclick="expandAllCards()" title="Expand all card details">Expand All</button>
+                <button class="btn btn-secondary" onclick="collapseAllCards()" title="Collapse all card details">Collapse</button>
+              </div>
+            </div>
+            
+          </div>
+          
+          <!-- View Displays -->
+          <div id="scholars-cards-view" class="scholar-cards-grid"></div>
+          <div id="scholars-table-view" class="scholars-table-wrap"></div>
+          <div id="scholars-list-view" class="scholars-list-wrap"></div>
+          
+        </section>
+
+        <!-- ─── 3. PIPELINE KANBAN VIEW ───────────────────────────── -->
+        <section id="view-pipeline" class="view-section">
+          <div class="card-box" style="margin-bottom:1.5rem;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+            <div>
+              <div style="font-weight:800;font-size:1rem;color:var(--text);">Outreach Pipeline Stages</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">Drag and drop scholars between stages or use the stage selector on any card.</div>
+            </div>
+            <div style="display:flex;gap:0.5rem;">
+              <button class="btn btn-secondary" onclick="switchView('scholars')">Add to Pipeline</button>
+            </div>
+          </div>
+          
+          <div class="pipeline-board" id="pipeline-kanban-board">
+            <!-- Injected by app.js -->
+          </div>
+        </section>
+
+        <!-- ─── 4. RESEARCH CLUSTERS VIEW ─────────────────────────── -->
+        <section id="view-clusters" class="view-section">
+          <div class="card-box" style="margin-bottom:1.5rem;padding:1rem 1.25rem;">
+            <div style="font-weight:800;font-size:1rem;color:var(--text);">Thematic Research Clusters</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">8 structured domains matching your LL.B. publications, ICJ advisory opinion papers, and AI infrastructure research.</div>
+          </div>
+          
+          <div class="clusters-grid" id="clusters-grid-view">
+            <!-- Injected by app.js -->
+          </div>
+        </section>
+
+        <!-- ─── 5. PRIORITY TARGETS VIEW ───────────────────────────── -->
+        <section id="view-priority" class="view-section">
+          <div class="card-box" style="margin-bottom:1.5rem;padding:1.25rem;background:linear-gradient(135deg, var(--surface), var(--primary-light));border-color:#D5CEF5;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.35rem;">
+              <span class="tag tag-ss" style="font-size:0.75rem;padding:0.25rem 0.75rem;">HIGH URGENCY</span>
+              <span style="font-weight:800;font-size:1.15rem;color:var(--text);">Priority Target Shortlist</span>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-muted);max-width:750px;line-height:1.6;">
+              Scholars identified as <strong>Super Standouts</strong> (hitting both your P7 DPhil proposal and Water Externalities proposal) and <strong>Tier 1 primary supervisors</strong> with direct confirmed institutional email addresses.
+            </div>
+          </div>
+          
+          <div class="priority-shortlist-wrap" id="priority-targets-list">
+            <!-- Injected by app.js -->
+          </div>
+        </section>
+
+        <!-- ─── 6. ANALYTICS VIEW ─────────────────────────────────── -->
+        <section id="view-analytics" class="view-section">
+          <div class="analytics-grid" id="analytics-dashboard-grid">
+            <!-- Injected by app.js -->
+          </div>
+        </section>
+
+        <!-- ─── 7. RESEARCHER PROFILE VIEW ─────────────────────────── -->
+        <section id="view-profile" class="view-section">
+          <div class="profile-layout" id="profile-container">
+            <!-- Injected dynamically by app.js -->
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- ====================================================================
+         3. SLIDE-IN SCHOLAR DETAIL DRAWER
+         ==================================================================== -->
+    <div class="drawer-backdrop" id="profile-drawer-backdrop" onclick="closeDrawer()"></div>
+    
+    <aside class="profile-drawer" id="profile-drawer">
+      <div class="drawer-header">
+        <span style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);">Scholar Intelligence Profile</span>
+        <button class="drawer-close-btn" onclick="closeDrawer()" aria-label="Close Profile Drawer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="drawer-body" id="drawer-content-body">
+        <!-- Injected by app.js -->
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         4. PROFILE EDIT MODAL & PHOTO UPLOAD
+         ==================================================================== -->
+    <input type="file" id="photo-upload-input" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
+    <canvas id="photo-resize-canvas" style="display:none;"></canvas>
+
+    <div class="modal-backdrop" id="profile-edit-modal-backdrop" onclick="closeProfileEditModal()">
+      <div class="modal-dialog" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div style="font-weight:800;font-size:1.1rem;color:var(--text);">Edit Academic Profile</div>
+          <button class="drawer-close-btn" onclick="closeProfileEditModal()" aria-label="Close Edit Modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" id="profile-edit-modal-body">
+          <!-- Populated by app.js -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" style="color:var(--red);" onclick="resetProfileToDefaults()">Reset to CV Defaults</button>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-secondary" onclick="closeProfileEditModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveProfileEdits()">Save Profile</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Toast Notification -->
+    <div class="toast" id="app-toast"></div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="profile-data.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

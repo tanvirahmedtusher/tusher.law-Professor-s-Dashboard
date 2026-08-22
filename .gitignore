@@ -1,0 +1,26 @@
+# Raw batch source and legacy dashboard files
+american_*.html
+mixed_*.html
+east_asian_*.html
+professor_*.html
+scholar_outreach.html
+
+# Raw datasets
+scholars_dataset.csv
+scholars_dataset.xlsx
+
+# Prompts, plans and source markdown documents
+antigravity-prompt-*.md
+implementation_plan.md
+Tusher_CV.md
+
+# Helper batch scripts
+push.bat
+
+# OS and temporary files
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+.vscode/
+.idea/
