@@ -38,7 +38,7 @@ const State = {
     }
     return p || (typeof DEFAULT_PROFILE_DATA !== 'undefined' ? DEFAULT_PROFILE_DATA : {});
   })(),
-  profilePhoto: localStorage.getItem('profilePhoto') || 'tusher-profile-photo.png',
+  profilePhoto: localStorage.getItem('profilePhoto') || 'tusher-profile-photo.jpg',
   
   // Active Drawer Scholar ID
   activeDrawerId: null,
@@ -673,7 +673,15 @@ function renderScholars() {
 function renderScholarsCards(list) {
   const container = document.getElementById('scholars-cards-view');
   if (list.length === 0) {
-    container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--text-muted);"><h3>No scholars match current filters</h3><p style="font-size:0.8rem;margin-top:0.3rem;">Try clearing search keywords or selecting 'All' for filters.</p></div>`;
+    container.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:4rem 1rem;color:var(--text-muted);display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:1rem;color:var(--text-subtle);">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <h3>No scholars match current filters</h3>
+        <p style="font-size:0.8rem;margin-top:0.5rem;max-width:300px;margin-left:auto;margin-right:auto;">Try clearing search keywords or selecting 'All' for filters.</p>
+      </div>`;
     return;
   }
   
@@ -1446,8 +1454,32 @@ function exportCSV() {
   showToast(`Exported ${list.length} scholars to CSV`);
 }
 
+// Theme Management
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  if (newTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+  localStorage.setItem('theme', newTheme);
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else if (savedTheme === 'light') {
+    document.documentElement.removeAttribute('data-theme');
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+}
+
 // Global Initialization
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   initStages();
   initDeadlines();
   
@@ -1783,7 +1815,7 @@ function triggerPhotoUpload() {
 
 function renderProfile() {
   const p = State.profile || (typeof DEFAULT_PROFILE_DATA !== 'undefined' ? DEFAULT_PROFILE_DATA : {});
-  const photo = State.profilePhoto || 'tusher-profile-photo.png';
+  const photo = State.profilePhoto || 'tusher-profile-photo.jpg';
   const container = document.getElementById('profile-container');
   if (!container) return;
 

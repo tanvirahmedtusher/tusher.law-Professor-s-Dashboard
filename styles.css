@@ -1,13 +1,16 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    SaaS Dashboard Design System - Unified Scholar Outreach Ecosystem
    ========================================================================== */
 
 :root {
-  /* Brand Palette - Modern SaaS Violet / Lavender */
-  --primary: #6D5BD0;
-  --primary-hover: #5A48B8;
-  --primary-light: #EFECFF;
-  --primary-glow: rgba(109, 91, 208, 0.15);
+  /* Brand Palette - Academic Navy */
+  --primary: #1E3A8A;
+  --primary-hover: #1E40AF;
+  --primary-light: #EFF6FF;
+  --primary-glow: rgba(30, 58, 138, 0.15);
+  
+  --font-display: 'Source Serif 4', Georgia, serif;
+  --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
   
   --bg: #F6F5FB;
   --surface: #FFFFFF;
@@ -83,6 +86,39 @@
   --topbar-h: 70px;
 }
 
+[data-theme="dark"] {
+  --bg: #0F172A;
+  --surface: #1E293B;
+  --surface-alt: #334155;
+  --surface-hover: #475569;
+  --surface-active: #64748B;
+  
+  --border: #334155;
+  --border-light: #1E293B;
+  --border-focus: #3B82F6;
+  
+  --text: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-subtle: #64748B;
+  
+  --primary-glow: rgba(59, 130, 246, 0.15);
+  
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Reset & Base */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -99,6 +135,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .metric-val, .display-text {
+  font-family: var(--font-display);
 }
 
 a {
@@ -5897,4 +5937,38 @@ html {
   }
 }
 
+
+
+/* Skeletons */
+@keyframes pulse-skeleton {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+.skeleton {
+  background-color: var(--border);
+  animation: pulse-skeleton 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  border-radius: var(--radius-sm);
+}
+.skeleton-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.skeleton-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+}
+.skeleton-line {
+  height: 12px;
+  width: 100%;
+}
+.skeleton-line.short {
+  width: 60%;
+}
 
