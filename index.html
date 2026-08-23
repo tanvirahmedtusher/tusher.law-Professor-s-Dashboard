@@ -1,10 +1,15 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>ScholarFlow - Academic Research &amp; Outreach Ecosystem</title>
   <meta name="description" content="Unified SaaS dashboard for academic outreach, research alignment, pipeline stages, and scholar intelligence.">
+  
+  <!-- Security Headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   
   <!-- Mobile & PWA Optimization -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -75,7 +80,7 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
           <span>Scholars</span>
-          <span class="nav-badge">214</span>
+          <span class="nav-badge" id="nav-badge-scholars">232</span>
         </button>
         
         <button class="nav-item" data-view="pipeline" onclick="switchView('pipeline')">
@@ -102,7 +107,28 @@
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
           </svg>
           <span>Priority Targets</span>
-          <span class="nav-badge" style="background:var(--gold-bg);color:var(--gold);">9</span>
+          <span class="nav-badge" id="nav-badge-priority" style="background:var(--gold-bg);color:var(--gold);">20</span>
+        </button>
+
+        <button class="nav-item" data-view="deadlines" onclick="switchView('deadlines')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"></path>
+          </svg>
+          <span>Deadline Tracker</span>
+          <span class="nav-badge" id="nav-badge-deadlines" style="background:var(--cyan-light);color:var(--cyan);">36</span>
+        </button>
+
+        <button class="nav-item" data-view="scholarships" onclick="switchView('scholarships')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+          </svg>
+          <span>Scholarship Tracker</span>
+          <span class="nav-badge" id="nav-badge-scholarships" style="background:var(--purple-light);color:var(--purple);">54</span>
         </button>
         
         <button class="nav-item" data-view="analytics" onclick="switchView('analytics')">
@@ -112,6 +138,24 @@
             <line x1="6" y1="20" x2="6" y2="14"></line>
           </svg>
           <span>Analytics</span>
+        </button>
+        
+        <button class="nav-item" data-view="subscription" onclick="switchView('subscription')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          <span>Subscription</span>
+        </button>
+        
+        <button class="nav-item" data-view="ai-search" onclick="switchView('ai-search')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          <span>AI Search</span>
+          <span class="nav-badge" style="background:var(--gold-bg);color:var(--gold);">AI</span>
         </button>
         
         <div class="sidebar-divider"></div>
@@ -130,7 +174,7 @@
       <div class="sidebar-footer">
         <div class="footer-stat">
           <span class="status-dot"></span>
-          <span>214 Scholars &middot; QS #1–#220</span>
+          <span>232 Scholars &middot; QS #1–#368</span>
         </div>
         <div class="footer-credit">Tanvir Ahmed Tusher &middot; LL.B.</div>
       </div>
@@ -333,6 +377,20 @@
               
             </div>
             
+            <!-- QS Rankings Widget -->
+            <div class="card-box qs-rankings-widget">
+              <div class="card-box-header">
+                <div>
+                  <div class="card-box-title">QS World University Rankings 2027</div>
+                  <div class="card-box-subtitle">Top universities from your scholar ecosystem — linked to QS profiles</div>
+                </div>
+                <a href="https://www.topuniversities.com/world-university-rankings" target="_blank" rel="noopener" class="btn-action">Full Rankings &rarr;</a>
+              </div>
+              <div class="qs-uni-list" id="qs-rankings-list">
+                <!-- Injected by app.js -->
+              </div>
+            </div>
+            
           </div>
         </section>
 
@@ -481,6 +539,287 @@
         <section id="view-profile" class="view-section">
           <div class="profile-layout" id="profile-container">
             <!-- Injected dynamically by app.js -->
+          </div>
+        </section>
+
+        <!-- ─── 8. SUBSCRIPTION VIEW ────────────────────────────────── -->
+        <section id="view-subscription" class="view-section">
+          <div id="subscription-container">
+            <!-- Injected by app.js -->
+          </div>
+        </section>
+
+        <!-- ─── 9. AI PROFESSOR SEARCH VIEW ─────────────────────────── -->
+        <section id="view-ai-search" class="view-section">
+          <div class="ai-search-layout" id="ai-search-container">
+            <!-- Injected by app.js -->
+          </div>
+        </section>
+
+        <!-- ─── 10. DEADLINE TRACKER ("THE LEDGER") VIEW ───────────── -->
+        <section id="view-deadlines" class="view-section">
+          <div class="ledger-container">
+            
+            <!-- Masthead -->
+            <div class="ledger-masthead">
+              <div class="ledger-masthead-top">
+                <div>
+                  <div class="ledger-brand-kicker">Vol. I &middot; Academic Reference Register</div>
+                  <div class="ledger-brand-title">📚 The Ledger</div>
+                  <div class="ledger-brand-sub">
+                    Calls for papers, training programmes, symposia, fellowships, and academic openings — filed, dated, and urgency-stamped by how soon they are due.
+                  </div>
+                </div>
+                <div class="ledger-masthead-actions">
+                  <button class="btn btn-secondary" onclick="exportDeadlines()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    Export
+                  </button>
+                  <button class="btn btn-secondary" onclick="document.getElementById('ledgerFileImport').click()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                    Import
+                  </button>
+                  <input type="file" id="ledgerFileImport" accept="application/json" style="display:none;" onchange="importDeadlines(event)">
+                  <button class="btn btn-primary" onclick="openDeadlineModal()">＋ Add Entry</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Info Banner -->
+            <div class="ledger-info-box" id="ledger-info-banner">
+              <span style="font-size:1.1rem;">ℹ️</span>
+              <div style="flex:1;">
+                <strong>How this works —</strong> everything is saved directly in your browser session and persistent storage (no external server required). Got a new academic flyer, CFP, or fellowship notice? Click <strong>“＋ Add Entry”</strong> to log it. Past-due deadlines move to the <strong>Archive</strong> tab automatically. Use <strong>Export</strong> to back up your register as a JSON file, or <strong>Import</strong> to restore anytime.
+              </div>
+              <button class="close-info" onclick="document.getElementById('ledger-info-banner').style.display='none'" title="Dismiss">✕</button>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="ledger-tabbar">
+              <button class="ledger-tab active" data-tab="dashboard" onclick="switchDeadlineTab('dashboard')">
+                <span>Dashboard</span>
+              </button>
+              <button class="ledger-tab" data-tab="calendar" onclick="switchDeadlineTab('calendar')">
+                <span>Calendar</span>
+              </button>
+              <button class="ledger-tab" data-tab="archive" onclick="switchDeadlineTab('archive')">
+                <span>Archive</span>
+                <span class="count" id="ledger-archive-count">0</span>
+              </button>
+            </div>
+
+            <!-- Sub-view: Dashboard -->
+            <div id="ledger-subview-dashboard">
+              <div class="ledger-toolbar">
+                <div class="ledger-search-wrap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" id="ledger-search-input" placeholder="Search title, organiser, location, topic..." oninput="handleDeadlineSearch(this.value)">
+                </div>
+                
+                <div class="ledger-pillrow" id="ledger-category-pills">
+                  <button class="ledger-pill active" data-cat="all" onclick="filterDeadlineCategory('all')">All</button>
+                  <button class="ledger-pill" data-cat="cfp" onclick="filterDeadlineCategory('cfp')">Call for Papers</button>
+                  <button class="ledger-pill" data-cat="training" onclick="filterDeadlineCategory('training')">Training &amp; Programmes</button>
+                  <button class="ledger-pill" data-cat="job" onclick="filterDeadlineCategory('job')">Jobs &amp; Internships</button>
+                </div>
+                
+                <select class="ledger-sortsel" id="ledger-sort-select" onchange="handleDeadlineSort(this.value)">
+                  <option value="deadline">Sort: Soonest Deadline</option>
+                  <option value="added">Sort: Recently Added</option>
+                  <option value="az">Sort: Title A–Z</option>
+                </select>
+              </div>
+
+              <!-- Stats row -->
+              <div class="ledger-stats" id="ledger-stats-row">
+                <!-- Injected by app.js -->
+              </div>
+
+              <!-- Legend -->
+              <div class="ledger-legend">
+                <span><i style="background:var(--red)"></i> Due within 7 days</span>
+                <span><i style="background:var(--amber)"></i> 2–3 weeks left</span>
+                <span><i style="background:var(--green)"></i> 3–5 weeks left</span>
+                <span><i style="background:var(--cyan)"></i> &gt; 5 weeks left</span>
+                <span><i style="background:var(--text-subtle)"></i> Rolling / open deadline</span>
+              </div>
+
+              <!-- Cards Grid -->
+              <div class="ledger-grid" id="ledger-card-grid">
+                <!-- Injected by app.js -->
+              </div>
+            </div>
+
+            <!-- Sub-view: Calendar -->
+            <div id="ledger-subview-calendar" style="display:none;">
+              <div class="ledger-cal-wrap">
+                <div class="ledger-cal-header">
+                  <h2 id="ledger-cal-month-label">Month Year</h2>
+                  <div class="ledger-cal-nav">
+                    <button class="btn btn-secondary btn-sm" onclick="changeDeadlineMonth(-1)">‹ Prev</button>
+                    <button class="btn btn-secondary btn-sm" onclick="resetDeadlineMonthToday()">Today</button>
+                    <button class="btn btn-secondary btn-sm" onclick="changeDeadlineMonth(1)">Next ›</button>
+                  </div>
+                </div>
+                
+                <div class="ledger-cal-grid" id="ledger-cal-dow">
+                  <div class="ledger-cal-dow">Sun</div>
+                  <div class="ledger-cal-dow">Mon</div>
+                  <div class="ledger-cal-dow">Tue</div>
+                  <div class="ledger-cal-dow">Wed</div>
+                  <div class="ledger-cal-dow">Thu</div>
+                  <div class="ledger-cal-dow">Fri</div>
+                  <div class="ledger-cal-dow">Sat</div>
+                </div>
+                
+                <div class="ledger-cal-grid" id="ledger-cal-grid" style="margin-top:0.4rem;">
+                  <!-- Injected by app.js -->
+                </div>
+                
+                <div class="ledger-cal-selection" id="ledger-cal-selection">
+                  <!-- Injected when a date is clicked -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-view: Archive -->
+            <div id="ledger-subview-archive" style="display:none;">
+              <div style="font-size:0.84rem;color:var(--text-muted);margin-bottom:1rem;">
+                Entries whose deadline has passed are moved here automatically to keep your active board clean. Restore an entry if you still need it active, or delete it permanently.
+              </div>
+              <div class="ledger-archive-list" id="ledger-archive-list">
+                <!-- Injected by app.js -->
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ─── 11. SCHOLARSHIP TRACKER ("THE SCHOLARSHIP DESK") VIEW ── -->
+        <section id="view-scholarships" class="view-section">
+          <div class="schol-container">
+            
+            <!-- Masthead -->
+            <div class="schol-masthead">
+              <div class="schol-masthead-top">
+                <div>
+                  <div class="schol-brand-kicker">Global Intelligence &middot; 7-Stage Framework</div>
+                  <div class="schol-brand-title">🎓 Scholarship Desk</div>
+                  <div class="schol-brand-sub">
+                    Curated international fellowships, full tuition waivers, and doctoral grants — verified eligibility gates, funding amounts, document checklists, and deadline tracking dossiers.
+                  </div>
+                </div>
+                <div class="schol-masthead-actions">
+                  <button class="btn btn-secondary" onclick="exportScholarships()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    Export
+                  </button>
+                  <button class="btn btn-secondary" onclick="document.getElementById('scholFileImport').click()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                    Import
+                  </button>
+                  <input type="file" id="scholFileImport" accept="application/json" style="display:none;" onchange="importScholarships(event)">
+                  <button class="btn btn-primary" onclick="openScholarshipModal()">＋ Add Scholarship</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Framework Info Banner -->
+            <div class="schol-info-box" id="schol-info-banner">
+              <span style="font-size:1.15rem;">🛡️</span>
+              <div style="flex:1;">
+                <strong>Primary Source Guarantee —</strong> Every scholarship is tracked directly from official government ministries, national funding commissions (Chevening, DAAD, Swiss FCS, Fulbright, Commonwealth, GKS, DFAT), and university portals. Deadlines are verified against current cycles. Use <strong>Discovery</strong> to compare realistic destinations, <strong>Matchmaker</strong> to test your profile against eligibility gates, and <strong>Exam Prep</strong> to track IELTS/GRE milestones.
+              </div>
+              <button class="close-info" onclick="document.getElementById('schol-info-banner').style.display='none'" title="Dismiss">✕</button>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="schol-tabbar">
+              <button class="schol-tab active" data-tab="directory" onclick="switchScholarshipTab('directory')">
+                <span>Directory</span>
+                <span class="count" id="schol-count-directory">54</span>
+              </button>
+              <button class="schol-tab" data-tab="discovery" onclick="switchScholarshipTab('discovery')">
+                <span>Country Discovery</span>
+              </button>
+              <button class="schol-tab" data-tab="profile" onclick="switchScholarshipTab('profile')">
+                <span>Profile Matchmaker</span>
+              </button>
+              <button class="schol-tab" data-tab="examprep" onclick="switchScholarshipTab('examprep')">
+                <span>Exam Prep &amp; Scores</span>
+              </button>
+              <button class="schol-tab" data-tab="calendar" onclick="switchScholarshipTab('calendar')">
+                <span>Calendar</span>
+              </button>
+              <button class="schol-tab" data-tab="archive" onclick="switchScholarshipTab('archive')">
+                <span>Archive</span>
+                <span class="count" id="schol-archive-count">0</span>
+              </button>
+            </div>
+
+            <!-- Sub-view 1: Directory -->
+            <div id="schol-subview-directory">
+              <div class="schol-toolbar">
+                <div class="schol-search-wrap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" id="schol-search-input" placeholder="Search scholarship, country, course, funding body..." oninput="handleScholarshipSearch(this.value)">
+                </div>
+                
+                <div class="schol-pillrow" id="schol-filter-pills">
+                  <button class="schol-pill active" data-filter="all" onclick="filterScholarshipCategory('all')">All</button>
+                  <button class="schol-pill" data-filter="full" onclick="filterScholarshipCategory('full')">Fully Funded</button>
+                  <button class="schol-pill" data-filter="tier1" onclick="filterScholarshipCategory('tier1')">⭐ Tier 1 Targets</button>
+                  <button class="schol-pill" data-filter="uk" onclick="filterScholarshipCategory('uk')">🇬🇧 UK</button>
+                  <button class="schol-pill" data-filter="europe" onclick="filterScholarshipCategory('europe')">🇪🇺 Europe</button>
+                  <button class="schol-pill" data-filter="usa" onclick="filterScholarshipCategory('usa')">🇺🇸 USA</button>
+                  <button class="schol-pill" data-filter="asia" onclick="filterScholarshipCategory('asia')">🌏 Asia-Pacific</button>
+                  <button class="schol-pill" data-filter="canada" onclick="filterScholarshipCategory('canada')">🇨🇦 Canada</button>
+                </div>
+                
+                <select class="schol-sortsel" id="schol-sort-select" onchange="handleScholarshipSort(this.value)">
+                  <option value="deadline">Sort: Soonest Deadline</option>
+                  <option value="funding">Sort: Funding Priority</option>
+                  <option value="match">Sort: Eligibility Match</option>
+                  <option value="az">Sort: Name A–Z</option>
+                </select>
+              </div>
+
+              <!-- Stats summary row -->
+              <div class="schol-stats" id="schol-stats-row">
+                <!-- Injected by app.js -->
+              </div>
+
+              <!-- Cards Grid -->
+              <div class="schol-grid" id="schol-card-grid">
+                <!-- Injected by app.js -->
+              </div>
+            </div>
+
+            <!-- Sub-view 2: Country Discovery Wizard -->
+            <div id="schol-subview-discovery" style="display:none;">
+              <!-- Injected by app.js -->
+            </div>
+
+            <!-- Sub-view 3: Profile Matchmaker -->
+            <div id="schol-subview-profile" style="display:none;">
+              <!-- Injected by app.js -->
+            </div>
+
+            <!-- Sub-view 4: Exam Readiness & Test Tracker -->
+            <div id="schol-subview-examprep" style="display:none;">
+              <!-- Injected by app.js -->
+            </div>
+
+            <!-- Sub-view 5: Calendar & Deadlines -->
+            <div id="schol-subview-calendar" style="display:none;">
+              <!-- Injected by app.js -->
+            </div>
+
+            <!-- Sub-view 6: Archive -->
+            <div id="schol-subview-archive" style="display:none;">
+              <!-- Injected by app.js -->
+            </div>
+
           </div>
         </section>
 
@@ -645,7 +984,7 @@
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
         <span>Scholars</span>
-        <span class="bottom-nav-badge">214</span>
+        <span class="bottom-nav-badge">232</span>
       </button>
 
       <button class="bottom-nav-item" data-view="pipeline" onclick="switchView('pipeline')">
@@ -662,7 +1001,17 @@
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
         </svg>
         <span>Priority</span>
-        <span class="bottom-nav-badge" style="background:var(--gold);color:#FFF;">9</span>
+        <span class="bottom-nav-badge" style="background:var(--gold);color:#FFF;">20</span>
+      </button>
+
+      <button class="bottom-nav-item" data-view="deadlines" onclick="switchView('deadlines')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>Deadlines</span>
       </button>
 
       <button class="bottom-nav-item" data-view="profile" onclick="switchView('profile')">
@@ -673,6 +1022,194 @@
         <span>Profile</span>
       </button>
     </nav>
+
+    <!-- Floating AI Search Indicator -->
+    <div class="ai-floating-indicator" id="ai-floating-indicator" onclick="switchView('ai-search')">
+      <div class="ai-floating-spinner"></div>
+      <span>Claude is searching...</span>
+    </div>
+
+    <!-- ====================================================================
+         DEADLINE ENTRY ADD / EDIT MODAL
+         ==================================================================== -->
+    <div class="ledger-modal-backdrop" id="ledger-modal-backdrop" onclick="closeDeadlineModal()">
+      <div class="ledger-modal" onclick="event.stopPropagation()">
+        <div class="ledger-modal-head">
+          <h3 id="ledger-modal-title">Add New Deadline Entry</h3>
+          <button class="drawer-close-btn" onclick="closeDeadlineModal()" aria-label="Close Modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="ledger-modal-body">
+          <div class="ledger-field">
+            <label>Title <span class="req-star">*</span></label>
+            <input type="text" id="lf-title" placeholder="e.g. Call for Papers — Climate Justice & AI Symposium">
+          </div>
+          <div class="ledger-field-row">
+            <div class="ledger-field">
+              <label>Category <span class="req-star">*</span></label>
+              <select id="lf-category">
+                <option value="cfp">Call for Papers / Abstracts</option>
+                <option value="training">Training / Programme</option>
+                <option value="job">Job / Internship</option>
+              </select>
+            </div>
+            <div class="ledger-field">
+              <label>Mode</label>
+              <select id="lf-mode">
+                <option value="online">Online</option>
+                <option value="in-person">In-person</option>
+                <option value="hybrid">Hybrid</option>
+                <option value="remote">Remote</option>
+              </select>
+            </div>
+          </div>
+          <div class="ledger-field">
+            <label>Organiser / Institution</label>
+            <input type="text" id="lf-organizer" placeholder="e.g. Cambridge Centre for Environment, Energy & Natural Resource Governance">
+          </div>
+          <div class="ledger-field">
+            <label>Location</label>
+            <input type="text" id="lf-location" placeholder="e.g. Cambridge, UK / Online">
+          </div>
+          <div class="ledger-field-row">
+            <div class="ledger-field">
+              <label>Submission Deadline</label>
+              <input type="date" id="lf-deadline">
+            </div>
+            <div class="ledger-field" style="align-self:end;padding-bottom:0.6rem;">
+              <label class="ledger-checkline">
+                <input type="checkbox" id="lf-rolling" onchange="toggleDeadlineRollingInput(this.checked)">
+                <span>Rolling / No fixed date</span>
+              </label>
+            </div>
+          </div>
+          <div class="ledger-field">
+            <label>Event / Conference Dates</label>
+            <input type="text" id="lf-eventdate" placeholder="e.g. 15–17 Nov 2026">
+          </div>
+          <div class="ledger-field">
+            <label>Submission / Event URL</label>
+            <input type="url" id="lf-link" placeholder="https://...">
+          </div>
+          <div class="ledger-field">
+            <label>Contact Email</label>
+            <input type="email" id="lf-email" placeholder="convenor@university.edu">
+          </div>
+          <div class="ledger-field">
+            <label>Submission Details &amp; Guidelines</label>
+            <textarea id="lf-details" placeholder="e.g. Abstract 300–500 words · Free registration for students · Publication opportunity in Springer edited volume"></textarea>
+          </div>
+        </div>
+        <div class="ledger-modal-foot">
+          <button class="btn btn-secondary" onclick="closeDeadlineModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveDeadlineEntry()">Save Entry</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         SCHOLARSHIP ENTRY ADD / EDIT MODAL
+         ==================================================================== -->
+    <div class="ledger-modal-backdrop" id="schol-modal-backdrop" onclick="closeScholarshipModal()">
+      <div class="ledger-modal" onclick="event.stopPropagation()" style="max-width:680px;">
+        <div class="ledger-modal-head">
+          <h3 id="schol-modal-title">Add Scholarship Opportunity</h3>
+          <button class="drawer-close-btn" onclick="closeScholarshipModal()" aria-label="Close Modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="ledger-modal-body">
+          <div class="ledger-field">
+            <label>Scholarship Name <span class="req-star">*</span></label>
+            <input type="text" id="sf-name" placeholder="e.g. Clarendon Fund Scholarship">
+          </div>
+          <div class="ledger-field-row">
+            <div class="ledger-field">
+              <label>Host University / Funding Body <span class="req-star">*</span></label>
+              <input type="text" id="sf-org" placeholder="e.g. University of Oxford">
+            </div>
+            <div class="ledger-field">
+              <label>Country / Region <span class="req-star">*</span></label>
+              <input type="text" id="sf-country" placeholder="e.g. UK, Switzerland, USA, Singapore">
+            </div>
+          </div>
+          <div class="ledger-field-row">
+            <div class="ledger-field">
+              <label>Funding Type <span class="req-star">*</span></label>
+              <select id="sf-funding">
+                <option value="Fully Funded">Fully Funded (Tuition + Living + Travel)</option>
+                <option value="Full Tuition">Full Tuition Waiver</option>
+                <option value="Partial">Partial Grant / Subsidy</option>
+              </select>
+            </div>
+            <div class="ledger-field">
+              <label>Study Level <span class="req-star">*</span></label>
+              <select id="sf-level">
+                <option value="Master's / LLM">Master's / LLM</option>
+                <option value="PhD / Doctoral">PhD / Doctoral</option>
+                <option value="Master's & PhD">Master's & PhD</option>
+                <option value="Postdoc / Fellowship">Postdoc / Fellowship</option>
+              </select>
+            </div>
+          </div>
+          <div class="ledger-field">
+            <label>Eligible Courses / Subject Areas</label>
+            <input type="text" id="sf-course" placeholder="e.g. LLM in Environmental Law, PhD in International Law, Climate Policy">
+          </div>
+          <div class="ledger-field">
+            <label>Funding Coverage &amp; Amount</label>
+            <input type="text" id="sf-amount" placeholder="e.g. 100% tuition + £19,237/yr stipend + health insurance">
+          </div>
+          <div class="ledger-field-row">
+            <div class="ledger-field">
+              <label>Scholarship Application Deadline</label>
+              <input type="date" id="sf-deadline">
+            </div>
+            <div class="ledger-field">
+              <label>Priority Tier</label>
+              <select id="sf-tier">
+                <option value="1">Tier 1: Full funding &amp; Top match</option>
+                <option value="2">Tier 2: Full funding, Open-field</option>
+                <option value="3">Tier 3: Partial / Specific</option>
+              </select>
+            </div>
+          </div>
+          <div class="ledger-field-row">
+            <div class="ledger-field">
+              <label>Academic &amp; GPA Requirements</label>
+              <input type="text" id="sf-academic" placeholder="e.g. First Class Honours / CGPA 3.7+">
+            </div>
+            <div class="ledger-field">
+              <label>English / Test Requirements</label>
+              <input type="text" id="sf-tests" placeholder="e.g. IELTS 7.5+ or TOEFL 100+">
+            </div>
+          </div>
+          <div class="ledger-field">
+            <label>Official Application Portal URL</label>
+            <input type="url" id="sf-appurl" placeholder="https://...">
+          </div>
+          <div class="ledger-field">
+            <label>Official Information Source URL</label>
+            <input type="url" id="sf-srcurl" placeholder="https://...">
+          </div>
+          <div class="ledger-field">
+            <label>Key Application Notes &amp; Required Documents</label>
+            <textarea id="sf-notes" placeholder="e.g. Separate scholarship statement required (500 words). 2 Academic references and supervisor support letter."></textarea>
+          </div>
+        </div>
+        <div class="ledger-modal-foot">
+          <button class="btn btn-secondary" onclick="closeScholarshipModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveScholarshipEntry()">Save Opportunity</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Global Toast Notification -->
     <div class="toast" id="app-toast"></div>
