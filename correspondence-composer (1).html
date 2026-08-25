@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Current — Correspondence Composer</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- UMD lib for .docx extraction — exposes window.mammoth -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.11.0/mammoth.browser.min.js"></script>
+
+<style>
+  :root{
+    --ink:#12203A; --ink-soft:#4A5875; --ink-faint:#8A93A8;
+    --paper:#F1EEE2; --paper-alt:#E7E1CE;
+    --surface:#FBFAF4; --surface-line:#DED8C4;
+    --river:#2F6E62; --river-deep:#1F4B43; --river-light:#E1EDE8;
+    --brass:#A97F30; --brass-light:#F1E6C9;
+    --clay:#9C4530; --clay-light:#F1E1D8;
+    --shadow-sm:0 1px 2px rgba(18,32,58,.06);
+    --shadow-md:0 8px 28px rgba(18,32,58,.10);
+    --shadow-lg:0 24px 60px rgba(18,32,58,.16);
+    --ease:cubic-bezier(.22,.7,.2,1);
+    --radius:14px; --radius-lg:20px; --maxw:1080px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter',-apple-system,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:500;letter-spacing:-.01em}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  a{color:var(--river)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  :focus-visible{outline:2px solid var(--river);outline-offset:2px;border-radius:4px}
+
+  header.site{padding:44px 0 8px}
+  .brandmark{display:flex;align-items:center;gap:.6rem;font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;color:var(--ink)}
+  .brandmark svg{width:24px;height:24px;stroke:var(--river)}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--river);display:flex;align-items:center;gap:.6em;margin-top:1.6rem}
+  .eyebrow::before{content:'';width:20px;height:1px;background:var(--river)}
+  h1.title{font-size:clamp(1.9rem,3.6vw,2.6rem);margin:.5rem 0 .6rem;max-width:18ch}
+  p.lede{color:var(--ink-soft);max-width:56ch;font-size:1rem}
+
+  .prog-toggle{display:inline-flex;background:var(--surface);border:1px solid var(--surface-line);border-radius:100px;padding:4px;margin:1.8rem 0 0;gap:2px}
+  .prog-toggle button{
+    font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.02em;
+    padding:.55rem 1.3rem;border:none;border-radius:100px;background:transparent;color:var(--ink-soft);
+    cursor:pointer;transition:background .3s var(--ease), color .3s var(--ease);
+  }
+  .prog-toggle button.active{background:var(--ink);color:var(--surface)}
+
+  section.composer{padding:44px 0 20px}
+  .composer-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:880px){.composer-grid{grid-template-columns:1fr}}
+
+  fieldset{border:1px solid var(--surface-line);background:var(--surface);border-radius:var(--radius-lg);padding:1.8rem;box-shadow:var(--shadow-sm)}
+  legend{
+    font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--river);padding:0 .5rem;margin-left:-.5rem;
+  }
+  .field{margin-top:1.1rem}
+  .field label{display:block;font-size:.82rem;color:var(--ink-soft);margin-bottom:.4rem}
+  .field .hint{font-size:.74rem;color:var(--ink-faint);margin-top:.3rem;display:block}
+  input[type=text],input[type=email],textarea,select{
+    width:100%;font-family:'Inter',sans-serif;font-size:.92rem;color:var(--ink);
+    background:var(--paper);border:1px solid var(--surface-line);border-radius:9px;
+    padding:.65rem .8rem;transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  input:focus,textarea:focus,select:focus{border-color:var(--river);box-shadow:0 0 0 3px var(--river-light)}
+  textarea{resize:vertical;min-height:64px;line-height:1.5}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+  .row3{display:grid;grid-template-columns:.7fr 1.3fr;gap:.8rem}
+  .required-mark{color:var(--clay)}
+
+  .tone-row{display:flex;gap:.5rem;margin-top:1.1rem;flex-wrap:wrap}
+  .tone-chip{
+    font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.4rem .8rem;border-radius:100px;
+    border:1px solid var(--surface-line);background:var(--paper);color:var(--ink-soft);cursor:pointer;
+    transition:border-color .25s var(--ease), color .25s var(--ease), background .25s var(--ease);
+  }
+  .tone-chip.active{border-color:var(--river);color:var(--river-deep);background:var(--river-light)}
+
+  /* ---- CV upload ---- */
+  .dropzone{
+    margin-top:1.1rem;border:1.5px dashed var(--surface-line);border-radius:12px;padding:1.1rem;
+    text-align:center;cursor:pointer;transition:border-color .25s var(--ease), background .25s var(--ease);
+    background:var(--paper);
+  }
+  .dropzone.drag{border-color:var(--river);background:var(--river-light)}
+  .dropzone svg{width:20px;height:20px;stroke:var(--ink-soft);margin-bottom:.4rem}
+  .dropzone p{font-size:.82rem;color:var(--ink-soft)}
+  .dropzone .sub{font-size:.7rem;color:var(--ink-faint);margin-top:.2rem}
+  .dropzone input[type=file]{display:none}
+  .cv-status{
+    display:none;margin-top:.7rem;align-items:center;justify-content:space-between;gap:.6rem;
+    background:var(--river-light);border:1px solid var(--river);border-radius:9px;padding:.55rem .8rem;
+    font-size:.8rem;color:var(--river-deep);
+  }
+  .cv-status.show{display:flex}
+  .cv-status button{background:none;border:none;color:var(--river-deep);cursor:pointer;font-size:.9rem;line-height:1}
+  .cv-error{display:none;margin-top:.6rem;font-size:.78rem;color:var(--clay)}
+  .cv-error.show{display:block}
+
+  /* ---- professor search toolbar ---- */
+  .search-row{display:flex;align-items:center;gap:.5rem;margin-top:1.1rem;flex-wrap:wrap}
+  .search-row .search-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;margin-right:.2rem}
+  .research-card{
+    display:none;margin-top:1rem;background:var(--paper);border:1px solid var(--surface-line);
+    border-radius:12px;padding:1.1rem 1.2rem;
+  }
+  .research-card.show{display:block;animation:riseIn .5s var(--ease)}
+  .research-card .verify-note{
+    font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--brass);background:var(--brass-light);
+    display:inline-block;padding:.25rem .6rem;border-radius:6px;margin-bottom:.8rem;
+  }
+  .research-overview{font-size:.86rem;color:var(--ink-soft);margin-bottom:.9rem;line-height:1.6}
+  .work-item{border-top:1px solid var(--surface-line);padding:.8rem 0}
+  .work-item:first-of-type{border-top:none}
+  .work-item .wtitle{font-size:.88rem;font-weight:600;color:var(--ink)}
+  .work-item .wnote{font-size:.82rem;color:var(--ink-soft);margin:.3rem 0 .5rem}
+  .work-item .wactions{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+  .mini-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:.68rem;background:var(--surface);color:var(--river-deep);
+    border:1px solid var(--river);border-radius:100px;padding:.3rem .7rem;cursor:pointer;
+    transition:background .2s var(--ease);
+  }
+  .mini-btn:hover{background:var(--river-light)}
+  .wsource{font-size:.72rem;color:var(--ink-faint)}
+  .research-loading{display:none;font-size:.82rem;color:var(--ink-soft);margin-top:.8rem}
+  .research-loading.show{display:flex;align-items:center;gap:.5rem}
+  .research-error{display:none;margin-top:.8rem;font-size:.8rem;color:var(--clay)}
+  .research-error.show{display:block}
+
+  /* ---- framework panel ---- */
+  .framework-toggle{
+    display:inline-flex;align-items:center;gap:.5rem;margin-top:1.6rem;
+    font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--ink-soft);
+    background:none;border:none;cursor:pointer;padding:0;
+  }
+  .framework-toggle svg{width:14px;height:14px;transition:transform .3s var(--ease)}
+  .framework-toggle.open svg{transform:rotate(180deg)}
+  .framework-panel{max-height:0;overflow:hidden;transition:max-height .5s var(--ease), margin .5s var(--ease);margin-top:0}
+  .framework-panel.open{max-height:1000px;margin-top:1rem}
+  .framework-inner{background:var(--surface);border:1px solid var(--surface-line);border-radius:var(--radius);padding:1.4rem 1.6rem}
+  .framework-inner h3{font-size:1.05rem;margin-bottom:.7rem}
+  .fw-step{display:grid;grid-template-columns:24px 1fr;gap:.6rem;padding:.55rem 0;border-top:1px solid var(--surface-line)}
+  .fw-step:first-of-type{border-top:none}
+  .fw-num{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--brass);padding-top:.1rem}
+  .fw-step p{font-size:.86rem;color:var(--ink-soft)}
+  .fw-step strong{color:var(--ink)}
+
+  .generate-row{display:flex;align-items:center;gap:1rem;margin-top:1.6rem;flex-wrap:wrap}
+  #generateBtn{
+    font-family:'IBM Plex Mono',monospace;font-size:.85rem;letter-spacing:.02em;
+    background:var(--ink);color:var(--surface);border:none;border-radius:100px;
+    padding:.85rem 1.8rem;cursor:pointer;display:inline-flex;align-items:center;gap:.6rem;
+    transition:background .3s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  #generateBtn:hover{background:var(--river-deep);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  #generateBtn:disabled{opacity:.55;cursor:progress;transform:none}
+  .spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(251,250,244,.35);border-top-color:var(--surface);animation:spin .8s linear infinite;display:none}
+  .spinner.dark{border:2px solid rgba(18,32,58,.2);border-top-color:var(--river)}
+  .loading .spinner{display:inline-block}
+  .loading .btn-arrow{display:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #formMsg{font-size:.82rem;color:var(--clay);display:none}
+  #formMsg.show{display:inline}
+
+  section.output{padding:10px 0 90px;display:none}
+  section.output.show{display:block;animation:riseIn .6s var(--ease)}
+  @keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .output-card{background:var(--surface);border:1px solid var(--surface-line);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-md)}
+  .output-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem}
+  .output-head h2{font-size:1.3rem}
+  .wordcount{font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:var(--ink-faint)}
+  .subject-row{display:flex;align-items:center;gap:.7rem;background:var(--paper);border:1px solid var(--surface-line);border-radius:9px;padding:.7rem .9rem;margin-bottom:1rem}
+  .subject-row .subj-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--brass);text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+  #subjectField{flex:1;background:none;border:none;font-family:'Inter',sans-serif;font-size:.92rem;color:var(--ink)}
+  #bodyField{width:100%;min-height:340px;font-size:.94rem;line-height:1.7;padding:1.1rem}
+  .output-actions{display:flex;gap:.7rem;margin-top:1.1rem;flex-wrap:wrap}
+  .btn-ghost{
+    font-family:'IBM Plex Mono',monospace;font-size:.78rem;background:none;color:var(--ink-soft);
+    border:1px solid var(--surface-line);border-radius:100px;padding:.55rem 1.1rem;cursor:pointer;
+    transition:border-color .25s var(--ease), color .25s var(--ease);display:inline-flex;align-items:center;gap:.45rem;
+  }
+  .btn-ghost:hover{border-color:var(--river);color:var(--river-deep)}
+  .btn-ghost.copied{border-color:var(--river);color:var(--river-deep);background:var(--river-light)}
+  #errorBanner{display:none;background:var(--clay-light);border:1px solid var(--clay);color:var(--clay);border-radius:9px;padding:.9rem 1.1rem;font-size:.86rem;margin-top:1rem}
+  #errorBanner.show{display:block}
+
+  footer{border-top:1px solid var(--surface-line);padding:2rem 0;margin-top:2rem}
+  footer p{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--ink-faint)}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="brandmark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M3 10c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>
+      The Current
+    </div>
+    <p class="eyebrow">Correspondence Composer</p>
+    <h1 class="title">Write the email a professor actually reads.</h1>
+    <p class="lede">Fill in your profile and what you know about them. The framework below shapes the draft. Nothing is invented: the model works only from what you give it.</p>
+
+    <div class="prog-toggle" role="tablist" aria-label="Programme type">
+      <button type="button" class="active" data-prog="phd" role="tab" aria-selected="true">PhD supervision</button>
+      <button type="button" data-prog="masters" role="tab" aria-selected="false">Master's / funding inquiry</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="composer">
+    <div class="wrap">
+      <form id="composerForm">
+        <div class="composer-grid">
+
+          <fieldset>
+            <legend>Your profile</legend>
+
+            <div class="field">
+              <label for="yourName">Full name <span class="required-mark">*</span></label>
+              <input type="text" id="yourName" required placeholder="Your full name">
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label for="yourStatus">Current status</label>
+                <input type="text" id="yourStatus" placeholder="e.g., final-year undergraduate, Master's student">
+              </div>
+              <div class="field">
+                <label for="yourInstitution">Institution</label>
+                <input type="text" id="yourInstitution" placeholder="Your current university">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="yourField">Your research interest / field <span class="required-mark">*</span></label>
+              <input type="text" id="yourField" required placeholder="Your discipline or research area">
+            </div>
+
+            <div class="field" id="researchTitleField">
+              <label for="researchTitle">Proposed research title</label>
+              <input type="text" id="researchTitle" placeholder="Your working research title, if you have one">
+              <span class="hint" id="researchTitleHint"></span>
+            </div>
+
+            <div class="field">
+              <label>CV <span class="hint">Optional — used as background context, not pasted verbatim into the email</span></label>
+              <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload CV">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+                <p>Click or drop your CV here</p>
+                <p class="sub">.md, .docx or .pdf</p>
+                <input type="file" id="cvInput" accept=".md,.markdown,.docx,.pdf">
+              </div>
+              <div class="cv-status" id="cvStatus">
+                <span id="cvStatusText"></span>
+                <button type="button" id="cvRemoveBtn" aria-label="Remove CV">✕</button>
+              </div>
+              <div class="cv-error" id="cvError"></div>
+            </div>
+
+            <div class="field">
+              <label for="achievements">Key achievements <span class="hint">One per line — publications, awards, projects. 2–3 is plenty.</span></label>
+              <textarea id="achievements" placeholder="One achievement per line"></textarea>
+            </div>
+
+            <div class="row3">
+              <div class="field">
+                <label for="asking">Seeking</label>
+                <select id="asking">
+                  <option>PhD supervision</option>
+                  <option>Funding &amp; scholarship information</option>
+                  <option>Postdoctoral / RA position</option>
+                  <option>General admissions guidance</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="timeline">Target intake</label>
+                <input type="text" id="timeline" placeholder="e.g., September 2027 intake">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="links">Links <span class="hint">Optional — LinkedIn, ORCID, portfolio</span></label>
+              <input type="text" id="links" placeholder="Links to include in your signature">
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>The professor &amp; your fit</legend>
+
+            <div class="row3">
+              <div class="field">
+                <label for="profTitle">Title</label>
+                <select id="profTitle">
+                  <option>Prof.</option>
+                  <option>Dr</option>
+                  <option>Professor</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="profName">Last name <span class="required-mark">*</span></label>
+                <input type="text" id="profName" required placeholder="Their last name">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="profUni">University / department</label>
+              <input type="text" id="profUni" placeholder="Their university and department">
+            </div>
+
+            <div class="search-row">
+              <span class="search-label">Look them up</span>
+              <button type="button" class="btn-ghost" id="searchGoogleBtn">Google ↗</button>
+              <button type="button" class="btn-ghost" id="searchScholarBtn">Google Scholar ↗</button>
+              <button type="button" class="btn-ghost" id="aiResearchBtn">✨ Research with AI</button>
+            </div>
+            <div class="research-loading" id="researchLoading"><span class="spinner dark loading show"></span> Searching…</div>
+            <div class="research-error" id="researchError"></div>
+            <div class="research-card" id="researchCard"></div>
+
+            <div class="field">
+              <label for="profWork">Their recent paper / project <span class="required-mark">*</span></label>
+              <input type="text" id="profWork" required placeholder="Title or topic of their recent paper or project">
+            </div>
+
+            <div class="field">
+              <label for="profIdea">The specific idea or argument that resonates with you <span class="hint">This is the most important field — name the actual claim or method, not just the general topic.</span></label>
+              <textarea id="profIdea" placeholder="What exactly, from their work, do you want to engage with?"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="profFit">How your work connects to theirs</label>
+              <textarea id="profFit" placeholder="The specific link between what you've done and what they work on"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="profNote">Anything to congratulate / acknowledge? <span class="hint">Optional — a recent prize, appointment, publication</span></label>
+              <input type="text" id="profNote" placeholder="A recent honour or achievement of theirs, if relevant">
+            </div>
+
+            <div class="tone-row" role="radiogroup" aria-label="Tone">
+              <button type="button" class="tone-chip active" data-tone="formal">Formal</button>
+              <button type="button" class="tone-chip" data-tone="warm">Warm-formal</button>
+              <button type="button" class="tone-chip" data-tone="direct">Direct &amp; brief</button>
+            </div>
+          </fieldset>
+        </div>
+
+        <button type="button" class="framework-toggle" id="frameworkToggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          View the framework this follows
+        </button>
+        <div class="framework-panel" id="frameworkPanel">
+          <div class="framework-inner" id="frameworkInner"></div>
+        </div>
+
+        <div class="generate-row">
+          <button type="button" id="generateBtn">
+            <span class="spinner"></span>
+            <span class="btn-arrow">Generate email →</span>
+            <span class="btn-label" style="display:none">Drafting…</span>
+          </button>
+          <span id="formMsg">Fill in the fields marked * first.</span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="output" id="outputSection">
+    <div class="wrap">
+      <div class="output-card">
+        <div class="output-head">
+          <h2>Your draft</h2>
+          <span class="wordcount" id="wordCount"></span>
+        </div>
+        <div class="subject-row">
+          <span class="subj-label">Subject</span>
+          <input type="text" id="subjectField">
+        </div>
+        <textarea id="bodyField"></textarea>
+        <div class="output-actions">
+          <button class="btn-ghost" id="copySubjectBtn">Copy subject</button>
+          <button class="btn-ghost" id="copyBodyBtn">Copy body</button>
+          <button class="btn-ghost" id="mailtoBtn">Open in mail app</button>
+          <button class="btn-ghost" id="regenBtn">Regenerate</button>
+        </div>
+        <div id="errorBanner"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>The Current — Correspondence Composer · drafts are a starting point, always read before sending</p>
+  </div>
+</footer>
+
+<script type="module">
+  // ES module so we can `import` pdf.js directly; mammoth (classic script above) is on window.mammoth
+  import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/6.1.200/pdf.min.mjs';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/6.1.200/pdf.worker.min.mjs';
+
+  // ---------- Framework content ----------
+  const FRAMEWORKS = {
+    phd: [
+      ["Subject line","Specific and dated — e.g. \u201cSeeking PhD Supervision: [Research Area] \u2013 [Your Name]\u201d or \u201cProspective PhD Applicant \u2013 [Field] \u2013 [Intake Year]\u201d. Never \u201cHello\u201d or \u201cPhD Inquiry\u201d."],
+      ["Address them correctly","Use the exact title (Dr / Prof) from their faculty page. Guessing, or using a first name, reads as not having done the homework."],
+      ["Open in 2\u20133 lines","Who you are, your institution and degree, your research area. No life story."],
+      ["State the ask directly","Say plainly that you're writing to formally explore PhD supervision \u2014 and name your proposed research title."],
+      ["The precision link \u2014 most important step","Connect a specific paper or argument of theirs to your own work \u2014 not \u201cI'm inspired by your work,\u201d but exactly how your research extends, tests, or fills a gap in something they've actually published."],
+      ["Two or three achievements","Publications, awards, relevant methodology \u2014 concise bullets, not an attached CV's worth of text in the email body."],
+      ["Close practically","Mention the CV is attached, state your target intake, and thank them. A short-call request is fine if the fit is strong."],
+      ["Length","200\u2013300 words is fine \u2014 precision earns length. A vague email should stay short; a precise one can run a little longer."],
+    ],
+    masters: [
+      ["Subject line","Clear and specific \u2014 e.g. \u201cInquiry About Graduate Funding Opportunities in [Department]\u201d."],
+      ["Address them correctly","Correct title, taken from the department website \u2014 never guessed."],
+      ["Open in 2\u20133 lines","Name, current position/university, the field you want to study \u2014 precise, not padded."],
+      ["Name the proposal, if it's a research Master's","Most fully-funded Master's places (MRes, MSc by research, MPhil) are research-based and expect a proposed research title or short proposal, exactly like a PhD application. If that's your route, name your working title early and give one sentence on its core question \u2014 don't leave it for the CV."],
+      ["Show the homework","Reference a specific paper, project, or research area of theirs that resonated with you. Generic praise (\u201cI am interested in your work\u201d) reads as a template."],
+      ["Your fit, briefly","1\u20132 sentences connecting your background or coursework to their research area \u2014 no exaggeration, no listing grades or co-curriculars."],
+      ["The ask \u2014 be specific","Funding, assistantships, application process, or how to strengthen your application \u2014 2\u20133 concrete questions work better than one vague one."],
+      ["Close warmly","Thank them for their time, offer to discuss further, sign off with contact details."],
+      ["Length","180\u2013250 words. A taught Master's inquiry can stay closer to 180; a research Master's naming a proposal title can run a little longer \u2014 precision earns length here too."],
+    ]
+  };
+  const CROSS_CUTTING = "Across both: no \u201cRespected Sir/Madam,\u201d no emojis or slang, no AI-sounding filler, and never copy-paste the same email to multiple supervisors unchanged.";
+
+  function renderFramework(prog){
+    const steps = FRAMEWORKS[prog];
+    const title = prog === 'phd' ? 'PhD supervision framework' : "Master's / funding inquiry framework";
+    let html = `<h3>${title}</h3>`;
+    steps.forEach((s, i) => { html += `<div class="fw-step"><div class="fw-num">${String(i+1).padStart(2,'0')}</div><p><strong>${s[0]}.</strong> ${s[1]}</p></div>`; });
+    html += `<div class="fw-step"><div class="fw-num">\uFF0B</div><p>${CROSS_CUTTING}</p></div>`;
+    document.getElementById('frameworkInner').innerHTML = html;
+  }
+
+  const researchTitleHint = document.getElementById('researchTitleHint');
+  function updateResearchTitleHint(prog){
+    researchTitleHint.textContent = prog === 'phd'
+      ? 'Required for PhD supervision emails.'
+      : 'Include this if your target programme is research-based or fully funded — most funded Master\u2019s require a proposal too, same as PhD.';
+  }
+
+  let currentProg = 'phd';
+  const progButtons = document.querySelectorAll('.prog-toggle button');
+  const askingSelect = document.getElementById('asking');
+  progButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      progButtons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+      currentProg = btn.dataset.prog;
+      askingSelect.value = currentProg === 'phd' ? 'PhD supervision' : 'Funding & scholarship information';
+      renderFramework(currentProg);
+      updateResearchTitleHint(currentProg);
+    });
+  });
+  renderFramework(currentProg);
+  updateResearchTitleHint(currentProg);
+
+  const fwToggle = document.getElementById('frameworkToggle');
+  const fwPanel = document.getElementById('frameworkPanel');
+  fwToggle.addEventListener('click', () => { fwToggle.classList.toggle('open'); fwPanel.classList.toggle('open'); });
+
+  let currentTone = 'formal';
+  document.querySelectorAll('.tone-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentTone = chip.dataset.tone;
+    });
+  });
+
+  function val(id){ return document.getElementById(id).value.trim(); }
+
+  // ---------- CV upload & parsing ----------
+  let cvText = '';
+  const dropzone = document.getElementById('dropzone');
+  const cvInput = document.getElementById('cvInput');
+  const cvStatus = document.getElementById('cvStatus');
+  const cvStatusText = document.getElementById('cvStatusText');
+  const cvError = document.getElementById('cvError');
+
+  dropzone.addEventListener('click', () => cvInput.click());
+  dropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cvInput.click(); } });
+  ['dragover'].forEach(evt => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('drag'); }));
+  dropzone.addEventListener('drop', (e) => { const f = e.dataTransfer.files[0]; if (f) handleCvFile(f); });
+  cvInput.addEventListener('change', (e) => { const f = e.target.files[0]; if (f) handleCvFile(f); });
+
+  document.getElementById('cvRemoveBtn').addEventListener('click', () => {
+    cvText = ''; cvInput.value = '';
+    cvStatus.classList.remove('show'); cvError.classList.remove('show');
+  });
+
+  async function handleCvFile(file){
+    cvError.classList.remove('show');
+    cvStatus.classList.remove('show');
+    const ext = file.name.split('.').pop().toLowerCase();
+    try{
+      let text = '';
+      if (ext === 'md' || ext === 'markdown'){
+        text = await file.text();
+      } else if (ext === 'docx'){
+        if (!window.mammoth) throw new Error('DOCX reader failed to load');
+        const buf = await file.arrayBuffer();
+        const result = await window.mammoth.extractRawText({ arrayBuffer: buf });
+        text = result.value;
+      } else if (ext === 'pdf'){
+        const buf = await file.arrayBuffer();
+        const doc = await pdfjsLib.getDocument({ data: buf }).promise;
+        const pages = [];
+        for (let i = 1; i <= doc.numPages; i++){
+          const page = await doc.getPage(i);
+          const content = await page.getTextContent();
+          pages.push(content.items.map(it => it.str).join(' '));
+        }
+        text = pages.join('\n\n');
+      } else {
+        throw new Error('Unsupported file type — use .md, .docx or .pdf');
+      }
+
+      text = text.trim();
+      if (!text) throw new Error('No extractable text found in that file');
+
+      let truncated = false;
+      if (text.length > 6000){ text = text.slice(0, 6000); truncated = true; }
+      cvText = text;
+
+      const words = cvText.trim().split(/\s+/).filter(Boolean).length;
+      cvStatusText.textContent = `${file.name} — ${words} words extracted${truncated ? ' (truncated)' : ''}`;
+      cvStatus.classList.add('show');
+    }catch(err){
+      cvText = '';
+      cvError.textContent = "Couldn't read that file (" + err.message + "). Try re-saving it and uploading again, or paste key achievements into the field below instead.";
+      cvError.classList.add('show');
+    }
+  }
+
+  // ---------- Professor search toolbar ----------
+  document.getElementById('searchGoogleBtn').addEventListener('click', () => {
+    if (!val('profName')){ document.getElementById('profName').focus(); return; }
+    const q = `${val('profTitle')} ${val('profName')} ${val('profUni')}`.trim();
+    window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank', 'noopener');
+  });
+  document.getElementById('searchScholarBtn').addEventListener('click', () => {
+    if (!val('profName')){ document.getElementById('profName').focus(); return; }
+    const q = `${val('profName')} ${val('profUni')}`.trim();
+    window.open('https://scholar.google.com/scholar?q=' + encodeURIComponent(q), '_blank', 'noopener');
+  });
+
+  const researchLoading = document.getElementById('researchLoading');
+  const researchErrorEl = document.getElementById('researchError');
+  const researchCard = document.getElementById('researchCard');
+
+  document.getElementById('aiResearchBtn').addEventListener('click', researchProfessor);
+
+  async function researchProfessor(){
+    if (!val('profName')){ document.getElementById('profName').focus(); return; }
+    researchErrorEl.classList.remove('show');
+    researchCard.classList.remove('show');
+    researchLoading.classList.add('show');
+
+    const who = `${val('profTitle')} ${val('profName')}${val('profUni') ? ', ' + val('profUni') : ''}`;
+    const system = `You are a research assistant helping a student prepare to contact an academic. Use web search to find this person's current research focus, recent publications or projects, and any recent honours or appointments. Summarize entirely in your own words — never quote source text directly. Always include the source URL for anything you cite. If you cannot confidently identify the right person, say so rather than guessing.
+
+Output ONLY valid JSON, no markdown fences, no text outside the JSON, in exactly this shape:
+{"overview": "2-3 sentence summary of their current research focus", "recent_works": [{"title": "...", "year": "...", "note": "one sentence on what it argues or does, in your own words", "url": "..."}], "honor": "a recent award/appointment/publication worth acknowledging, or empty string if none found"}
+Include at most 3 items in recent_works.`;
+
+    const user = `Research this academic: ${who}. Their likely field of relevance to the student: ${val('yourField') || 'unspecified'}.`;
+
+    try{
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system,
+          messages: [{ role: "user", content: user }],
+          tools: [{ type: "web_search_20250305", name: "web_search" }]
+        })
+      });
+      if (!response.ok) throw new Error(`API returned ${response.status}`);
+      const data = await response.json();
+      const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
+      if (!text) throw new Error('No summary returned');
+
+      let clean = text.replace(/^```json\s*|^```\s*|```$/g, '').trim();
+      let parsed;
+      try{ parsed = JSON.parse(clean); }
+      catch(e){
+        const s = clean.indexOf('{'), en = clean.lastIndexOf('}');
+        if (s !== -1 && en !== -1) parsed = JSON.parse(clean.slice(s, en+1)); else throw e;
+      }
+      renderResearchCard(parsed);
+    }catch(err){
+      researchErrorEl.textContent = "Couldn't complete the search (" + err.message + "). This calls the Anthropic API with web search and only works while this file is open inside Claude. You can still use the Google / Google Scholar buttons above.";
+      researchErrorEl.classList.add('show');
+    }finally{
+      researchLoading.classList.remove('show');
+    }
+  }
+
+  function renderResearchCard(data){
+    let html = '<span class="verify-note">AI-summarized from web search — verify before relying on it</span>';
+    if (data.overview) html += `<div class="research-overview">${escapeHtml(data.overview)}</div>`;
+    (data.recent_works || []).forEach((w, i) => {
+      html += `<div class="work-item">
+        <div class="wtitle">${escapeHtml(w.title || '')}${w.year ? ' (' + escapeHtml(w.year) + ')' : ''}</div>
+        <div class="wnote">${escapeHtml(w.note || '')}</div>
+        <div class="wactions">
+          <button type="button" class="mini-btn" data-fill="profWork" data-value="${escapeAttr(w.title || '')}">Use as their recent work</button>
+          <button type="button" class="mini-btn" data-fill="profIdea" data-value="${escapeAttr(w.note || '')}">Use as fit angle</button>
+          ${w.url ? `<a class="wsource" href="${escapeAttr(w.url)}" target="_blank" rel="noopener">source ↗</a>` : ''}
+        </div>
+      </div>`;
+    });
+    if (data.honor){
+      html += `<div class="work-item">
+        <div class="wtitle">To acknowledge</div>
+        <div class="wnote">${escapeHtml(data.honor)}</div>
+        <div class="wactions"><button type="button" class="mini-btn" data-fill="profNote" data-value="${escapeAttr(data.honor)}">Use as acknowledgment</button></div>
+      </div>`;
+    }
+    researchCard.innerHTML = html;
+    researchCard.classList.add('show');
+    researchCard.querySelectorAll('[data-fill]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.fill);
+        target.value = btn.dataset.value;
+        btn.textContent = 'Inserted ✓';
+        setTimeout(() => { btn.textContent = btn.dataset.fill === 'profWork' ? 'Use as their recent work' : (btn.dataset.fill === 'profIdea' ? 'Use as fit angle' : 'Use as acknowledgment'); }, 1400);
+      });
+    });
+  }
+
+  function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+  function escapeAttr(s){ return (s || '').replace(/"/g, '&quot;'); }
+
+  // ---------- Generation ----------
+  const generateBtn = document.getElementById('generateBtn');
+  const formMsg = document.getElementById('formMsg');
+  const outputSection = document.getElementById('outputSection');
+  const errorBanner = document.getElementById('errorBanner');
+  const subjectField = document.getElementById('subjectField');
+  const bodyField = document.getElementById('bodyField');
+  const wordCount = document.getElementById('wordCount');
+
+  function buildSystemPrompt(){
+    const steps = FRAMEWORKS[currentProg].map((s,i) => `${i+1}. ${s[0]}: ${s[1]}`).join('\n');
+    return `You are an expert academic correspondence writer helping a student draft a first-contact email to a professor, for ${currentProg === 'phd' ? 'PhD supervision' : "a Master's programme / funding inquiry"}.
+
+Follow this framework exactly:
+${steps}
+${CROSS_CUTTING}
+
+Critical rules:
+- Use ONLY the facts provided by the user below. Never invent achievements, papers, citations, dates, or details not given to you. If a field is empty, omit it gracefully rather than inventing filler.
+- If a CV excerpt is provided, treat it as background context — you may draw one or two additional relevant details from it if they strengthen the fit paragraph, but the user's manually listed achievements take priority. Do not dump CV content into the email.
+- Do not use generic phrases like "I am very interested in your work" without the specific detail the user gave you.
+- Write in the tone the user selected: "formal" = traditional academic register; "warm" = formal but personable; "direct" = brief, no throat-clearing, gets to the point fast.
+- Output ONLY valid JSON, nothing before or after it, no markdown code fences, in exactly this shape:
+{"subject": "the subject line", "body": "the full email body including greeting and sign-off, with \\n\\n between paragraphs"}`;
+  }
+
+  function buildUserPrompt(){
+    const lines = [];
+    lines.push(`Your name: ${val('yourName')}`);
+    if (val('yourStatus')) lines.push(`Current status: ${val('yourStatus')}`);
+    if (val('yourInstitution')) lines.push(`Institution: ${val('yourInstitution')}`);
+    lines.push(`Your field/research interest: ${val('yourField')}`);
+    if (val('researchTitle')) lines.push(`Proposed research title: ${val('researchTitle')}`);
+    if (val('achievements')) lines.push(`Key achievements:\n${val('achievements')}`);
+    if (cvText) lines.push(`CV excerpt (background context only):\n${cvText}`);
+    lines.push(`Seeking: ${val('asking')}`);
+    if (val('timeline')) lines.push(`Target intake/timeline: ${val('timeline')}`);
+    if (val('links')) lines.push(`Links to include in signature: ${val('links')}`);
+    lines.push(`Professor: ${val('profTitle')} ${val('profName')}`);
+    if (val('profUni')) lines.push(`Their university/department: ${val('profUni')}`);
+    lines.push(`Their recent paper/project: ${val('profWork')}`);
+    if (val('profIdea')) lines.push(`Specific idea/argument that resonates: ${val('profIdea')}`);
+    if (val('profFit')) lines.push(`How my work connects to theirs: ${val('profFit')}`);
+    if (val('profNote')) lines.push(`Something to acknowledge/congratulate: ${val('profNote')}`);
+    lines.push(`Tone: ${currentTone}`);
+    lines.push(`CV attached: ${currentProg === 'phd' ? 'yes, mention it is attached' : 'not necessarily, only mention if it fits'}`);
+    return lines.join('\n');
+  }
+
+  function validate(){
+    return ['yourName','yourField','profName','profWork'].every(id => val(id).length > 0);
+  }
+
+  async function generate(){
+    if (!validate()){ formMsg.classList.add('show'); return; }
+    formMsg.classList.remove('show');
+    errorBanner.classList.remove('show');
+    generateBtn.classList.add('loading');
+    generateBtn.disabled = true;
+
+    try{
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: buildSystemPrompt(),
+          messages: [{ role: "user", content: buildUserPrompt() }]
+        })
+      });
+      if (!response.ok) throw new Error(`API returned ${response.status}`);
+      const data = await response.json();
+      const textBlock = (data.content || []).find(b => b.type === 'text');
+      if (!textBlock) throw new Error("No text in response");
+
+      let clean = textBlock.text.trim().replace(/^```json\s*|^```\s*|```$/g, '').trim();
+      let parsed;
+      try{ parsed = JSON.parse(clean); }
+      catch(e){
+        const start = clean.indexOf('{'), end = clean.lastIndexOf('}');
+        if (start !== -1 && end !== -1) parsed = JSON.parse(clean.slice(start, end+1)); else throw e;
+      }
+
+      subjectField.value = parsed.subject || '';
+      bodyField.value = parsed.body || '';
+      updateWordCount();
+      outputSection.classList.add('show');
+      outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }catch(err){
+      errorBanner.textContent = "Couldn't generate a draft (" + err.message + "). This feature calls the Anthropic API and only works when this file is opened inside Claude — if you've downloaded it and opened it as a local file, or hosted it elsewhere, the API call has nothing to authenticate against.";
+      errorBanner.classList.add('show');
+      outputSection.classList.add('show');
+      outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }finally{
+      generateBtn.classList.remove('loading');
+      generateBtn.disabled = false;
+    }
+  }
+
+  generateBtn.addEventListener('click', generate);
+  document.getElementById('regenBtn').addEventListener('click', generate);
+
+  function updateWordCount(){
+    const words = bodyField.value.trim().split(/\s+/).filter(Boolean).length;
+    wordCount.textContent = words + (words === 1 ? ' word' : ' words');
+  }
+  bodyField.addEventListener('input', updateWordCount);
+
+  async function copyText(text, btn){
+    try{
+      await navigator.clipboard.writeText(text);
+      const original = btn.textContent;
+      btn.textContent = 'Copied ✓'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1600);
+    }catch(e){ btn.textContent = 'Select & copy manually'; }
+  }
+  document.getElementById('copySubjectBtn').addEventListener('click', (e) => copyText(subjectField.value, e.currentTarget));
+  document.getElementById('copyBodyBtn').addEventListener('click', (e) => copyText(bodyField.value, e.currentTarget));
+  document.getElementById('mailtoBtn').addEventListener('click', () => {
+    window.location.href = `mailto:?subject=${encodeURIComponent(subjectField.value)}&body=${encodeURIComponent(bodyField.value)}`;
+  });
+</script>
+
+</body>
+</html>

@@ -369,3 +369,7 @@ const DEFAULT_PROFILE_DATA = {
     }
   ]
 };
+
+if (typeof window !== 'undefined') {
+  window.PROFILE_DATA = DEFAULT_PROFILE_DATA;
+}

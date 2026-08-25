@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Standout Professors — Tanvir Ahmed Tusher</title>
+<style>
+:root{
+  --navy:#0A1628;--navy2:#1A2E4A;--blue:#2B5C8A;--blue-lt:#E8F0F8;
+  --gold:#C9973A;--gold-lt:#FDF6E3;--gold-dark:#9A7020;
+  --white:#FFFFFF;--off:#F5F7FA;--text:#1C2B3A;--muted:#5A6B7C;
+  --border:#D5DDE6;--green:#1E7E4A;--green-lt:#E8F5EE;
+  --red:#B02020;--red-lt:#FBE8E8;--purple:#5B3A8A;--purple-lt:#F0EBF8;
+  --teal:#1A6B6B;--teal-lt:#E0F4F4;--orange:#B05C10;--orange-lt:#FDF0E0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--off);color:var(--text);line-height:1.6;font-size:14px;}
+
+/* HEADER */
+.site-header{background:var(--navy);padding:2rem 2rem 1.5rem;border-bottom:3px solid var(--gold);}
+.site-header .eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.site-header h1{font-size:1.75rem;font-weight:700;color:#fff;line-height:1.2;}
+.site-header p{color:#8EA7BF;font-size:.85rem;margin-top:.5rem;max-width:680px;}
+.hdr-stats{display:flex;gap:2rem;margin-top:1.2rem;flex-wrap:wrap;}
+.hdr-stat .n{font-size:1.5rem;font-weight:700;color:var(--gold);}
+.hdr-stat .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#8EA7BF;}
+
+/* STICKY CONTROLS */
+.controls{background:#fff;border-bottom:1px solid var(--border);padding:.85rem 2rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.ctrl-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;margin-right:.2rem;}
+.fbtn{font-size:.72rem;font-weight:600;padding:.32rem .75rem;border-radius:4px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:.15s;white-space:nowrap;}
+.fbtn:hover{background:var(--blue-lt);border-color:var(--blue);}
+.fbtn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.search-box{margin-left:auto;padding:.32rem .75rem;border:1px solid var(--border);border-radius:4px;font-size:.78rem;width:180px;outline:none;}
+.search-box:focus{border-color:var(--blue);}
+
+/* MAIN */
+.wrap{max-width:1200px;margin:0 auto;padding:1.5rem 1.5rem 4rem;}
+.section-label{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+
+/* CARDS GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1.4rem;margin-top:1.2rem;}
+@media(max-width:600px){.grid{grid-template-columns:1fr;}}
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 5px rgba(0,0,0,.06);transition:.2s;}
+.card.hidden{display:none;}
+
+/* CARD TOP */
+.card-top{padding:1.1rem 1.2rem .9rem;border-bottom:3px solid var(--gold);}
+.star-badge{font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:.18rem .55rem;border-radius:3px;display:inline-block;margin-bottom:.4rem;text-transform:uppercase;}
+.s3{background:#FFF3CD;color:#856404;}
+.s2{background:#E8F5EE;color:var(--green);}
+.cluster-tag{font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:.15rem .5rem;border-radius:3px;display:inline-block;margin-left:.4rem;text-transform:uppercase;vertical-align:middle;}
+.cl-twail{background:var(--purple-lt);color:var(--purple);}
+.cl-climate{background:var(--green-lt);color:var(--green);}
+.cl-water{background:var(--teal-lt);color:var(--teal);}
+.cl-ai{background:var(--blue-lt);color:var(--blue);}
+.cl-invest{background:var(--orange-lt);color:var(--orange);}
+.cl-dual{background:#FDF6E3;color:var(--gold-dark);}
+.card-top h3{font-size:1rem;font-weight:700;color:var(--navy);line-height:1.25;margin-bottom:.15rem;}
+.card-top .role{font-size:.75rem;color:var(--muted);margin-top:.1rem;}
+.card-top .univ{font-size:.78rem;font-weight:600;color:var(--blue);margin-top:.15rem;}
+.card-top .email-row{margin-top:.45rem;font-size:.7rem;color:var(--muted);}
+.email-row a{color:var(--blue);text-decoration:none;}
+.email-row a:hover{text-decoration:underline;}
+.es{display:inline-block;padding:.08rem .35rem;border-radius:2px;font-size:.6rem;font-weight:700;margin-left:.3rem;}
+.es-c{background:var(--green-lt);color:var(--green);}
+.es-v{background:#FFF3CD;color:#856404;}
+
+/* CARD BODY */
+.card-body{padding:1.1rem 1.2rem;flex:1;}
+.cb-section{margin-bottom:.9rem;}
+.cb-section h4{font-size:.63rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+.cb-section p{font-size:.82rem;line-height:1.55;color:var(--text);}
+
+.nexus-box{background:var(--blue-lt);border-left:3px solid var(--blue);padding:.65rem .85rem;border-radius:0 4px 4px 0;margin-bottom:.85rem;}
+.nexus-box h4{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:.3rem;}
+.nexus-box p{font-size:.8rem;line-height:1.55;color:#1A2B3A;}
+
+.contrib-box{background:var(--green-lt);border-left:3px solid var(--green);padding:.65rem .85rem;border-radius:0 4px 4px 0;margin-bottom:.85rem;}
+.contrib-box h4{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:.3rem;}
+.contrib-box p{font-size:.8rem;line-height:1.55;color:#1A3D2B;}
+
+.timing-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;background:var(--off);border-radius:5px;padding:.6rem .8rem;margin-bottom:.8rem;}
+.tc .tl{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.1rem;}
+.tc .tv{font-size:.75rem;font-weight:700;color:var(--text);}
+.tc .bd{color:var(--gold-dark);}
+
+.warn-box{background:var(--red-lt);border-left:3px solid var(--red);padding:.5rem .8rem;border-radius:0 3px 3px 0;margin-bottom:.7rem;font-size:.75rem;color:var(--red);}
+
+hr.div{border:none;border-top:1px solid var(--border);margin:.7rem 0;}
+
+/* EMAIL TOGGLE */
+.email-btn{display:flex;align-items:center;gap:.4rem;width:100%;background:var(--gold-lt);border:1px solid #E0C97A;border-radius:4px;padding:.5rem .85rem;font-size:.75rem;font-weight:600;color:var(--gold-dark);cursor:pointer;text-align:left;transition:.15s;}
+.email-btn:hover{background:#F5E8B0;}
+.email-btn .arr{margin-left:auto;font-size:.58rem;transition:.2s;}
+.email-btn.open .arr{transform:rotate(180deg);}
+.email-panel{display:none;background:var(--off);border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px;padding:.85rem;}
+.email-panel.vis{display:block;}
+.e-meta{font-size:.72rem;color:var(--muted);margin-bottom:.55rem;line-height:1.7;}
+.e-meta strong{color:var(--text);}
+.e-body{font-family:'Georgia',serif;font-size:.78rem;line-height:1.85;color:var(--text);white-space:pre-wrap;background:#fff;border:1px solid var(--border);border-radius:4px;padding:.85rem;margin-bottom:.6rem;}
+.copy-btn{font-size:.7rem;font-weight:600;padding:.35rem .85rem;background:var(--navy);color:#fff;border:none;border-radius:3px;cursor:pointer;transition:.15s;}
+.copy-btn:hover{background:var(--navy2);}
+.copy-btn.ok{background:var(--green);}
+
+footer{text-align:center;font-size:.7rem;color:var(--muted);padding:2rem 0 1rem;border-top:1px solid var(--border);margin-top:2rem;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="eyebrow">Global Scholar Outreach — Super Standout Professors</div>
+  <h1>Super Standout Professors — Tanvir Ahmed Tusher</h1>
+  <p>Extracted from 13 batches of research across QS Top 150 universities. Super Standouts hit BOTH proposals (Halda Constitutional Rights + AI Water Externalities) or are Tier 1 on one with extraordinary precision. Each entry includes a tailored draft email.</p>
+  <div class="hdr-stats">
+    <div class="hdr-stat"><div class="n">10</div><div class="l">Super Standouts</div></div>
+    <div class="hdr-stat"><div class="n">9</div><div class="l">Countries</div></div>
+    <div class="hdr-stat"><div class="n">5</div><div class="l">Clusters</div></div>
+    <div class="hdr-stat"><div class="n">5</div><div class="l">⭐⭐⭐ Dual Matches</div></div>
+  </div>
+</header>
+
+<div class="controls">
+  <span class="ctrl-label">Filter:</span>
+  <button class="fbtn active" onclick="filter('all',this)">All (10)</button>
+  <button class="fbtn" onclick="filter('dual',this)">⭐⭐⭐ Dual Match</button>
+  <button class="fbtn" onclick="filter('climate',this)">Climate / Constitutional</button>
+  <button class="fbtn" onclick="filter('water',this)">Water / AI-Water</button>
+  <button class="fbtn" onclick="filter('twail',this)">TWAIL / Critical IL</button>
+  <input class="search-box" placeholder="Search professor or university..." oninput="search(this.value)">
+</div>
+
+<div class="wrap">
+<div class="section-label">Super Standout Scholars — Customised Draft Emails</div>
+<div class="grid" id="grid">
+
+<!-- ═══ 1. LOUIS KOTZÉ — WAGENINGEN ════════════════════════════ -->
+<div class="card" data-cluster="dual" data-search="kotzé kotze wageningen earth system law dual constitutional water">
+  <div class="card-top">
+    <span class="star-badge s3">⭐⭐⭐ Dual Match — Strongest Single Scholar Found</span>
+    <span class="cluster-tag cl-dual">Both Proposals</span>
+    <h3>Prof. Louis Kotzé</h3>
+    <div class="role">Chair, Law Group · Senior Professorial Fellow in Earth System Law</div>
+    <div class="univ">Wageningen University &amp; Research (Netherlands) · Formerly North-West University (SA)</div>
+    <div class="email-row">Email: <a href="#">Check wur.nl/en/persons/louis-kotze.htm</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Leads the Earth System Law initiative — which frames legal governance around planetary boundaries. Freshwater use is one of nine named boundaries in his <em>Research Handbook on Law, Governance and Planetary Boundaries</em> (Edward Elgar, 2021). His environmental constitutionalism work includes direct analysis of <em>Neubauer et al v Germany</em> (GermanLaw Journal, 2021). Actively recruiting for a new "Planetary Politics" initiative at Wageningen (2026). 185+ publications, €1.2M+ research funding. Explicitly frames his work through a Global South lens as a South African scholar.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 CEST</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">1:00–3:00 PM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points — Both Proposals</h4>
+      <p><strong>Water Externalities:</strong> His planetary boundary framework names freshwater use as a boundary — your AI data centre groundwater depletion at Kaliakoir is a direct documented breach of that boundary in a developing state. He theorised the framework; you document the breach empirically.<br><br>
+      <strong>Halda / P7:</strong> His Neubauer constitutional analysis is the comparative doctrinal precedent for your Article 18A/32 collision. He applies constitutional proportionality to climate claims in Germany; your proposal does the same in Bangladesh — same framework, different jurisdiction, yours undocumented.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>South Asian empirical documentation of the freshwater planetary boundary breach (Kaliakoir groundwater depression, Barind Tract depletion data) for his Wageningen Planetary Politics initiative; comparative constitutional climate rights case analysis positioning Bangladesh alongside Germany and South Africa for his earth system constitutionalism framework.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Prof. Kotzé <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check wur.nl/en/persons/louis-kotze.htm]<br><strong>Subject:</strong> Earth System Law, Freshwater Boundaries &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Professor Kotzé,
+
+I write with reference to your scholarship on earth system law and environmental constitutionalism — particularly your Research Handbook on Law, Governance and Planetary Boundaries and your constitutional analysis of Neubauer et al v Germany, which I have engaged with closely in developing two interconnected research proposals.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh. My published and forthcoming work includes a paper on TWAIL and climate reparations (RAPID, Vol. 7, Issue 2, under revision), a loss-and-damage paper under minor revision at Daengku Journal, and two forthcoming IGI Global book chapters on AI governance and disaster liability — one of which, 'Governing the Invisible Giant: TWAIL, the Energy-Water Nexus, and the International Legal Void in AI Infrastructure,' was marked "Recommended" by Professor Lawrence B. Solum (Texas A&M). I am developing two research proposals: one on the constitutional rights collision produced by salinity intrusion at Bangladesh's Halda River (Article 18A versus Article 32), and one on the constitutional proportionality challenge posed by AI data centres extracting groundwater from Bangladesh's Kaliakoir Hi-Tech Park.
+
+The connection I want to identify is precise and double. Your earth system law framework names freshwater use as one of nine planetary boundaries — my Water Externalities proposal documents what a breach of that boundary looks like in a developing-state legal context: AI infrastructure operators drawing from Bangladesh's water table with no regulatory obligation to account for the harm. You theorised the framework; my research documents its breach empirically from the inside. Your environmental constitutionalism work — particularly your Neubauer analysis — is simultaneously the comparative doctrinal precedent for my Halda proposal's Article 18A/32 rights-collision argument. You apply constitutional proportionality to competing climate claims in Germany; I am attempting the same analysis in Bangladesh, where the collision has never been adjudicated. Both proposals are working within the analytical architecture your scholarship has built.
+
+What I recognise in that is also what I still lack: the planetary-scale legal framework that connects these local documentation points to a structural argument. I cannot build that connection without engagement with a scholar who has already built the scaffold.
+
+I am a final-year student, and I humbly request the opportunity to contribute to your research voluntarily — specifically through South Asian empirical documentation for your Wageningen Planetary Politics initiative (freshwater boundary breach data, constitutional rights-collision case material) and comparative constitutional climate rights analysis for your earth system constitutionalism framework. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 2. CHRISTIAN CALLIESS — FU BERLIN ══════════════════════ -->
+<div class="card" data-cluster="dual climate" data-search="calliess berlin klimaklagen constitutional climate dual">
+  <div class="card-top">
+    <span class="star-badge s3">⭐⭐⭐ Dual Match — Constitutional Climate Rights</span>
+    <span class="cluster-tag cl-dual">Both Proposals</span>
+    <h3>Prof. Dr. Christian Calliess</h3>
+    <div class="role">Professor of Public Law and European Law</div>
+    <div class="univ">Freie Universität Berlin (Germany) · QS Top 150</div>
+    <div class="email-row">Email: <a href="#">Check fu-berlin.de/en/sites/rechtswissenschaft</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Leading German constitutional and European law scholar with a dedicated research programme on Klimaklagen (climate litigation) — specifically how fundamental rights doctrine under the German Basic Law adjudicates competing climate claims. His work on the BVerfG 2021 climate decision on intergenerational equity is directly relevant to constitutional proportionality analysis. Also researches the precautionary principle as a burden-allocation mechanism under EU and international environmental law.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 CEST</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">1:00–3:00 PM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points</h4>
+      <p><strong>Halda / P7:</strong> His BVerfG 2021 analysis on how constitutional proportionality resolves competing rights claims under climate stress is the methodological template for your Article 18A/32 rights-collision. Germany's constitutional proportionality tradition and Bangladesh's inherited common-law proportionality framework are structurally comparable — his comparative work demonstrates exactly what your proposal needs to execute.<br><br>
+      <strong>Water Externalities:</strong> His precautionary principle framework as a burden-allocation mechanism is directly applicable to the AI data centre groundwater harm your proposal addresses — the precautionary burden shifts in exactly the way you need to argue.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>South Asian comparative case documentation positioning Bangladesh's Halda rights-collision alongside German, Indian, and Pakistani constitutional climate jurisprudence; empirical grounding for the precautionary principle's application to AI-mediated resource extraction in developing states.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Prof. Calliess <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check FU Berlin law faculty directory]<br><strong>Subject:</strong> Klimaklagen, Constitutional Proportionality &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Professor Calliess,
+
+I write with reference to your Klimaklagen research programme and your scholarship on how fundamental rights doctrine adjudicates competing climate-related constitutional claims — particularly your analysis of the BVerfG 2021 decision on intergenerational equity and your work on the precautionary principle as a burden-allocation mechanism, both of which I have engaged with closely in developing my research.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh, researching a constitutional rights collision produced by salinity intrusion in the Halda River Basin: Article 18A (Environmental Rights, non-justiciable directive) versus Article 32 (Right to Life, justiciable) versus livelihood rights — all three held by the same community, triggered by the same cause, with no operative mechanism to determine which claim prevails. My published and forthcoming work includes a paper on TWAIL and climate reparations (RAPID, Vol. 7, Issue 2), a loss-and-damage paper under minor revision, and two IGI Global book chapters on AI governance — including 'Governing the Invisible Giant,' marked "Recommended" by Professor Lawrence B. Solum (Texas A&M).
+
+The connection I want to identify is precise. Your Klimaklagen scholarship demonstrates how constitutional proportionality doctrine resolves competing rights claims under climate stress in the German context. Germany's constitutional proportionality tradition and Bangladesh's inherited common-law proportionality framework are structurally comparable — the analytical architecture your scholarship has built is what my proposal requires in a different jurisdiction. Your BVerfG analysis is the closest existing methodological template for the Halda rights-collision adjudication, and your precautionary principle framework is simultaneously applicable to my second proposal on AI data centre groundwater extraction.
+
+What I recognise as my limitation is the comparative methodology itself: I can describe Bangladesh's constitutional collision with precision; I cannot yet execute the cross-system proportionality analysis your scholarship demonstrates. That gap is what I need to close.
+
+I humbly request the opportunity to contribute to your research voluntarily — specifically through South Asian comparative constitutional case documentation (Bangladesh, India, Pakistan) for your Klimaklagen comparative framework, and empirical grounding for the precautionary principle's application to AI-mediated resource extraction in developing-state contexts. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 3. ÁINE RYALL — UCC IRELAND ════════════════════════════ -->
+<div class="card" data-cluster="climate" data-search="ryall ucc cork aarhus access justice environmental constitutional">
+  <div class="card-top">
+    <span class="star-badge s3">⭐⭐⭐ P7 — Tier 1 (UN Committee Chair)</span>
+    <span class="cluster-tag cl-climate">Constitutional / Access to Justice</span>
+    <h3>Prof. Áine Ryall</h3>
+    <div class="role">Professor; Co-Director, Centre for Law &amp; the Environment; Chair, Aarhus Convention Compliance Committee</div>
+    <div class="univ">University College Cork (UCC), Ireland</div>
+    <div class="email-row">Email: <a href="#">Check ucc.ie/en/law/people</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Chairs the Aarhus Convention Compliance Committee — the UN body governing "access to justice in environmental matters" across 47 State Parties. This is the precise procedural-rights doctrine underlying your Article 18A non-justiciability argument. Current research covers Irish climate litigation, environmental human rights standards, and Aarhus access-to-justice compliance. Co-Director, UCC Centre for Law and the Environment.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 IST</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">1:30–3:30 PM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points</h4>
+      <p>The Aarhus Convention's "access to justice in environmental matters" pillar is the international standard against which your Article 18A non-justiciability argument is measured. She chairs the body that determines when states fail this standard across 47 parties — Bangladesh's constitutional structure would be directly evaluated by her committee's doctrinal framework. Your argument that a non-justiciable environmental right fails the access-to-justice standard is the exact claim her scholarship adjudicates at the international level.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>Bangladesh-specific case documentation of environmental access-to-justice failures under a non-justiciable constitutional framework — precisely the developing-state Aarhus compliance gap her committee's jurisprudence identifies but cannot fully document from inside the Global North; comparative analysis of ECR 1997 against Aarhus Article 9(3) standards.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Prof. Ryall <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check ucc.ie/en/law/people]<br><strong>Subject:</strong> Aarhus Access to Justice, Non-Justiciable Environmental Rights &amp; Bangladesh — A Voluntary Contribution</div>
+      <div class="e-body">Dear Professor Ryall,
+
+I write with reference to your role as Chair of the Aarhus Convention Compliance Committee and your scholarship on access to justice in environmental matters — particularly your work on how the Convention's Article 9 standards apply across different constitutional frameworks, which I have engaged with closely in developing my doctoral research proposal.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh, developing a research proposal titled 'When Rights Collide,' which examines the constitutional rights collision produced by salinity intrusion in the Halda River Basin — specifically the gap between Bangladesh's Article 18A (Environmental Rights, placed in the non-justiciable Directive Principles of State Policy) and Article 32 (Right to Life, justiciable), with no operative procedural mechanism for communities to enforce the former independently. My published and forthcoming work includes a TWAIL climate reparations paper (RAPID, Vol. 7, Issue 2), a loss-and-damage paper under minor revision, and two IGI Global book chapters on AI governance.
+
+The connection I want to name is precise. The Aarhus Convention's access-to-justice pillar — which you chair the compliance body for — is the international standard against which Bangladesh's constitutional non-justiciability produces the exact failure your committee is designed to identify. Your compliance jurisprudence across 47 state parties has built the doctrinal framework that my proposal's access-to-justice argument requires; Bangladesh is a jurisdiction your committee would reach if the case were brought, but it has not been documented in your comparative corpus.
+
+The gap I recognise in my own work is methodological: I can describe the constitutional failure from the inside — the specific procedural void between ECR 1997 Rule 7 and the Aarhus Article 9(3) standard — but I cannot situate this within the full compliance jurisprudence your committee has built. That is what engagement with your scholarship would supply.
+
+I humbly request the opportunity to contribute to your research voluntarily — specifically by providing Bangladesh-specific documentation of environmental access-to-justice failures under a non-justiciable constitutional framework, which represents a developing-state data point your comparative compliance work has not yet incorporated. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 4. SANJA BOGOJEVIĆ — LOCATION VERIFY ══════════════════ -->
+<div class="card" data-cluster="dual climate" data-search="bogojevic bogojević oxford birmingham constitutional environmental dual">
+  <div class="card-top">
+    <span class="star-badge s3">⭐⭐⭐ Dual Match — P7 Primary + Water T1</span>
+    <span class="cluster-tag cl-dual">Both Proposals</span>
+    <h3>Prof. Sanja Bogojević</h3>
+    <div class="role">Professor of Environmental Law</div>
+    <div class="univ">Priority list shows Oxford — earlier research flagged Birmingham. <strong>Verify location before sending.</strong></div>
+    <div class="email-row">Email: <a href="#">Verify via ox.ac.uk or birmingham.ac.uk law faculty directory</a> <span class="es es-v">⚠ Must Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="warn-box">⚠ LOCATION CONFLICT: The priority list identifies this scholar at Oxford. An earlier analysis in this research project flagged her at Birmingham. Confirm her current institution at <strong>law.ox.ac.uk/people</strong> OR <strong>birmingham.ac.uk/schools/law</strong> before sending this email. Sending to the wrong institution will damage credibility.</div>
+    <div class="cb-section">
+      <h4>Research Profile</h4>
+      <p>Environmental law scholar with expertise in EU environmental law, climate constitutional proportionality, and the legal architecture of environmental rights enforcement. Research identified as the single highest-precision match to the P7 Halda proposal and Tier 1 on Water Externalities — if confirmed at Oxford, the most important email in this entire batch.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 BST</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">2:00–4:00 PM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points (once location confirmed)</h4>
+      <p>Constitutional proportionality + environmental rights enforcement methodology = precise supervisory fit for Halda P7. EU climate constitutional architecture = direct comparator for Bangladesh's Article 18A non-justiciability problem. Water Tier 1 match on constitutional proportionality for the AI water externalities proportionality test.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>South Asian comparative constitutional case documentation for her environmental rights enforcement framework; Bangladesh empirical grounding for the proportionality test between justiciable and non-justiciable environmental constitutional claims.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Prof. Bogojević (verify location first) <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Verify institution first — then find email via correct faculty directory]<br><strong>Subject:</strong> Constitutional Environmental Rights, Proportionality &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Professor Bogojević,
+
+I write with reference to your scholarship on constitutional proportionality in environmental law and the legal architecture of environmental rights enforcement — work I have engaged with closely in developing two interconnected research proposals.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh, developing a research proposal titled 'When Rights Collide,' examining the constitutional collision produced by salinity intrusion in the Halda River Basin: Article 18A (Environmental Rights, non-justiciable directive) versus Article 32 (Right to Life, justiciable), with no operative mechanism to resolve which prevails. A second proposal examines whether the directive interest in AI-assisted education can survive a structured proportionality assessment against a justiciable right to water security — triggered by AI data centre groundwater extraction from Bangladesh's Kaliakoir Hi-Tech Park. My published and forthcoming work includes a TWAIL climate reparations paper (RAPID, Vol. 7, Issue 2), a loss-and-damage paper under minor revision, and two IGI Global book chapters on AI governance, including 'Governing the Invisible Giant,' marked "Recommended" by Professor Lawrence B. Solum.
+
+The connection I want to identify spans both proposals: your constitutional proportionality methodology in environmental law is the precise doctrinal framework my Halda rights-collision argument requires, and the same proportionality test my Water Externalities proposal must execute. You have built the methodological architecture at the doctrinal level that I am attempting to apply in a South Asian jurisdiction — a context not represented in your comparative corpus.
+
+What I recognise as my limitation is the comparative methodology: I can describe both constitutional problems from the inside, empirically and doctrinally; I cannot yet execute the proportionality analysis your scholarship demonstrates at the structural level.
+
+I humbly request the opportunity to contribute to your research voluntarily — through South Asian comparative constitutional documentation, and empirical grounding for the proportionality test between justiciable and non-justiciable environmental claims in a developing-state context. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 5. MARIE-CLAIRE CORDONIER SEGGER — CAMBRIDGE ══════════ -->
+<div class="card" data-cluster="dual climate twail" data-search="cordonier segger cambridge sustainable development UNFCCC Asia Pacific dual">
+  <div class="card-top">
+    <span class="star-badge s2">⭐⭐ Dual Match — UNFCCC + Asia Pacific Capacity-Building</span>
+    <span class="cluster-tag cl-dual">Both Proposals</span>
+    <h3>Prof. Marie-Claire Cordonier Segger</h3>
+    <div class="role">Professor of International Law; Director, CISDL</div>
+    <div class="univ">University of Cambridge (UK) · QS Top 10</div>
+    <div class="email-row">Email: <a href="#">Check law.cam.ac.uk/people</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Director of the Centre for International Sustainable Development Law (CISDL). Leads Asia Pacific capacity-building on UNFCCC implementation including loss-and-damage frameworks. Work spans sustainable development law, climate governance, and treaty implementation across developing states — including explicit South/Southeast Asian programming. Strong institutional networks with UNFCCC bodies relevant to your L&amp;D papers.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 BST</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">2:00–4:00 PM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points</h4>
+      <p><strong>TWAIL + L&D:</strong> Her Asia Pacific UNFCCC capacity-building work is the institutional site where your Loss and Damage TWAIL paper's arguments should reach policymakers — she runs the bridge between doctrinal scholarship and treaty implementation in the region your papers address.<br><br>
+      <strong>Both proposals:</strong> CISDL's sustainable development law framework covers both the constitutional environmental rights (P7) and the technology governance (Water Externalities) dimensions of your research within a Global South development law lens.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>Bangladesh-specific L&amp;D accountability case documentation for her Asia Pacific UNFCCC programming; South Asian empirical grounding for CISDL's sustainable development law frameworks on climate governance and technology; CDRI Index methodology for her loss-and-damage capacity-building initiatives.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Prof. Cordonier Segger <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check law.cam.ac.uk/people/faculty]<br><strong>Subject:</strong> UNFCCC Loss &amp; Damage, Asia Pacific Governance &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Professor Cordonier Segger,
+
+I write with reference to your work on sustainable development law and your Asia Pacific capacity-building programming on UNFCCC loss and damage implementation — work I have engaged with closely in developing my research on South Asian climate accountability.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh. My work includes a paper on 'The UNFCCC Loss and Damage Regime, the ICJ Advisory Opinion, and the Structural Limits of Climate Accountability: A South Asian TWAIL Perspective' (under minor revision, Daengku Journal), a paper on TWAIL and climate reparations (RAPID, Vol. 7, Issue 2, under revision), a proposed Climate Displacement Responsibility Index (CDRI) offering an evidence-based responsibility allocation tool for South Asian states, and two IGI Global book chapters — including 'Governing the Invisible Giant: TWAIL, the Energy-Water Nexus, and the International Legal Void in AI Infrastructure,' marked "Recommended" by Professor Lawrence B. Solum. I have presented at ICERPASA 2026 and the 3rd IUB Undergraduate Law Students' Research Conference (Outstanding Paper Award, 2026).
+
+The connection I want to identify is specific and practical. Your Asia Pacific UNFCCC capacity-building work is the institutional site where the arguments of my Loss and Damage paper should reach policymakers — the bridge between doctrinal scholarship and treaty implementation in precisely the region my work addresses. Bangladesh is the most acutely affected South Asian state in the L&D accountability gap your programming addresses, yet it remains underrepresented in CISDL's empirical base. My CDRI framework offers an evidence-based responsibility allocation methodology that your capacity-building initiatives could operationalise.
+
+What I recognise as my limitation is the institutional dimension: I can build the doctrinal argument and the index framework; I cannot yet connect it to the treaty implementation and capacity-building infrastructure your scholarship has built over two decades. That is what I need to learn.
+
+I humbly request the opportunity to contribute to your research voluntarily — specifically through Bangladesh-specific L&D accountability documentation and CDRI methodology input for your Asia Pacific UNFCCC programming. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 6. SURYAPRATIM ROY — TRINITY COLLEGE DUBLIN ═══════════ -->
+<div class="card" data-cluster="dual climate" data-search="suryapratim roy TCD dublin indian constitutionalism energy transition dual">
+  <div class="card-top">
+    <span class="star-badge s2">⭐⭐ Dual Match — Indian Constitutionalism + Energy Transition</span>
+    <span class="cluster-tag cl-dual">Both Proposals</span>
+    <h3>Dr. Suryapratim Roy</h3>
+    <div class="role">Associate Professor</div>
+    <div class="univ">Trinity College Dublin (Ireland)</div>
+    <div class="email-row">Email: <a href="#">Check law.tcd.ie/people</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Works at the intersection of Indian constitutional jurisprudence, energy transition law, and comparative environmental constitutionalism. His scholarship on Indian court decisions (Samatha, Niyamgiri) and the Directive Principles of State Policy is the direct comparative framework your Halda proposal draws upon — he has already done the South Asian constitutional environmental law work your comparative analysis needs to build on.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 IST</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">1:30–3:30 PM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points</h4>
+      <p><strong>Halda / P7:</strong> His Indian DPSP jurisprudence work (Samatha, Niyamgiri) is the most direct comparator for your Article 18A non-justiciability argument — Bangladesh's DPSP structure mirrors India's, and his scholarship on how Indian courts have moved environmental directive principles toward justiciability is the doctrinal bridge your comparative methodology requires.<br><br>
+      <strong>Water / AI:</strong> His energy transition work intersects with your AI infrastructure governance argument on regulatory design for technology-driven resource impacts.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>Bangladesh constitutional environmental law case documentation — mapping how Bangladesh's DPSP structure has (or has not) evolved toward justiciability compared to the Indian trajectory his scholarship documents; empirical case data on the Article 18A enforcement gap for his comparative constitutional environmental law framework.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Dr. Roy <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check law.tcd.ie/people]<br><strong>Subject:</strong> Indian Constitutional Jurisprudence, Directive Principles &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Dr Roy,
+
+I write with reference to your scholarship on Indian constitutional environmental jurisprudence — particularly your work on the Directive Principles of State Policy and how Indian courts have engaged with the Samatha and Niyamgiri decisions on community consent and environmental rights, which I have engaged with closely in developing my doctoral research proposal.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh, developing a research proposal titled 'When Rights Collide,' examining the constitutional rights collision produced by salinity intrusion in Bangladesh's Halda River Basin: Article 18A (Environmental Rights, placed in the non-justiciable Directive Principles of State Policy) versus Article 32 (Right to Life, justiciable) versus livelihood rights, with no operative mechanism to determine which prevails. My published and forthcoming work includes a TWAIL climate reparations paper (RAPID, Vol. 7, Issue 2), a loss-and-damage paper under minor revision, and two IGI Global book chapters — including 'Governing the Invisible Giant: TWAIL, the Energy-Water Nexus,' marked "Recommended" by Professor Lawrence B. Solum.
+
+The connection is precise. Bangladesh's DPSP structure directly mirrors India's — Article 18A was inserted alongside non-justiciable directives in a constitutional architecture inherited from the same common law tradition. Your scholarship on how Indian courts have navigated the Samatha and Niyamgiri community-consent framework within that architecture is the closest existing comparative methodology for my Halda analysis. You have documented the trajectory I need to measure Bangladesh against; my proposal provides the undocumented South Asian jurisdiction your comparative framework has not yet reached.
+
+What I recognise as my limitation is the depth of comparative constitutional methodology: I can describe Bangladesh's constitutional collision empirically; I cannot yet execute the cross-jurisdiction DPSP analysis your scholarship demonstrates.
+
+I humbly request the opportunity to contribute to your research voluntarily — specifically through Bangladesh constitutional environmental law case documentation mapping the Article 18A enforcement gap against the Indian DPSP trajectory your work has already charted. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 7. PATRICIA WOUTERS — WUHAN UNIVERSITY ════════════════ -->
+<div class="card" data-cluster="water" data-search="wouters wuhan international water law academy transboundary South Asia Indus">
+  <div class="card-top">
+    <span class="star-badge s3">⭐⭐⭐ Water Tier 1 — South Asian Transboundary Water Law</span>
+    <span class="cluster-tag cl-water">Water / Transboundary</span>
+    <h3>Prof. Patricia Wouters</h3>
+    <div class="role">Professor; Founding Director, International Water Law Academy (IWLA), CIBOS</div>
+    <div class="univ">Wuhan University (China) · QS Top 200; Hon. Visiting Prof., UBC</div>
+    <div class="email-row">Email: <a href="#">Check iwla.whu.edu.cn</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Founding Director of IWLA — a dedicated PhD programme in International Water Law and Public International Law at Wuhan University's China Institute of Boundary and Ocean Studies. Has personally published on the Indus Waters Treaty (South Asian transboundary water law — same doctrinal family as Bangladesh's Ganges Treaty). 30+ years specialising in transboundary water cooperation. Governing Board Member, International Water Management Institute (IWMI) since 2023. Hosted IWLA Global Launch Conference, Sept 2025.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 CST</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">7:00–9:00 AM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points</h4>
+      <p>Her Indus Waters Treaty scholarship is in the same South Asian transboundary water law doctrinal family as Bangladesh's 1996 Ganges Water Treaty — the treaty framework your Water Externalities proposal's no-harm principle argument operates within. She has published on the legal architecture of South Asian transboundary river cooperation; your proposal documents what happens when AI infrastructure disrupts the same water systems those treaties were designed to govern.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>Bangladesh-specific documentation of AI-driven groundwater extraction (Kaliakoir) as a new transboundary water harm not covered by existing treaty architecture; South Asian empirical case data for IWLA's PhD programme and IWMI governance work; comparative analysis of the 1996 Ganges Treaty against the no-harm principle standard your Water Externalities argument requires.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Prof. Wouters <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check iwla.whu.edu.cn or CIBOS directory]<br><strong>Subject:</strong> South Asian Transboundary Water Law, AI Infrastructure &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Professor Wouters,
+
+I write with reference to your scholarship on South Asian transboundary water law — particularly your work on the Indus Waters Treaty and the legal architecture of transboundary river cooperation in the region — and the International Water Law Academy's PhD programme, both of which I have engaged with closely in developing my research.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh, developing a research proposal titled 'Fundamental Right, Directive Aspiration: A Constitutional Proportionality Assessment of AI-Driven Water Externalities Against Bangladeshi University Students' Right to Education.' The proposal documents and analyses a novel transboundary water harm: AI data centre operators at Bangladesh's Kaliakoir Hi-Tech Park extracting groundwater with no regulatory obligation to account for the impact on Bangladesh's already water-stressed system — a harm that falls outside the coverage of the 1996 Ganges Water Treaty and the no-harm principle as currently operationalised. My forthcoming book chapter 'Governing the Invisible Giant: TWAIL, the Energy-Water Nexus, and the International Legal Void in AI Infrastructure' (IGI Global, © 2026, marked "Recommended" by Professor Lawrence B. Solum) addresses the same governance void from an investment treaty angle.
+
+The connection I want to identify is specific. Your Indus Waters Treaty scholarship is in the same South Asian transboundary water law doctrinal family as the Ganges Water Treaty framework my proposal operates within — you have published on the legal architecture of the same treaty system my research reveals to be inadequate for AI-mediated water harm. The IWLA's PhD programme in international water law is also the most precise institutional home for the research question I am developing.
+
+What I recognise as my limitation is the treaty-law depth: I can document the harm and identify the regulatory void from the constitutional side; I cannot yet situate it fully within the transboundary water law treaty architecture your scholarship has built over 30 years.
+
+I humbly request the opportunity to contribute to your research and the IWLA voluntarily — specifically through Bangladesh-specific documentation of AI-driven groundwater extraction as a new category of transboundary water harm, and comparative analysis of the Ganges Treaty against the no-harm standard your scholarship applies. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 8. AGNES CHONG — CUHK ══════════════════════════════════ -->
+<div class="card" data-cluster="water climate" data-search="agnes chong CUHK hong kong water preservation climate risk greater bay area">
+  <div class="card-top">
+    <span class="star-badge s2">⭐⭐ Water T1 + P7 Adjacent — Active Water Grant</span>
+    <span class="cluster-tag cl-water">Water / Climate Risk</span>
+    <h3>Dr. Agnes Chong</h3>
+    <div class="role">Assistant Professor; Chair, Environmental, Energy &amp; Climate Law Cluster, CCTL</div>
+    <div class="univ">Chinese University of Hong Kong (CUHK) · QS #47</div>
+    <div class="email-row">Email: <a href="#">Check law.cuhk.edu.hk/app/people/prof-agnes-chong</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Principal Investigator (Early Career Scheme 2025/26, HKD 428,000, 24 months): "Inter-jurisdictional Cooperation on Water Preservation in the Greater Bay Area and Water Security for Hong Kong." Also PI on "The Evolving Legal Regime of Climate Governance and the Implications for Directors' Duties: Climate Risk as Financial Risk" (CUHK Direct Grant). Chair of the Environmental, Energy &amp; Climate Law Cluster at the Centre for Comparative and Transnational Law.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 HKT</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">7:00–9:00 AM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points</h4>
+      <p>Her active ECS-funded water preservation project on inter-jurisdictional cooperation in the Greater Bay Area is structurally parallel to your Water Externalities proposal: both address cross-boundary water security where existing legal frameworks fail to allocate responsibility. Your Kaliakoir groundwater case is the South Asian equivalent of her Hong Kong water security case — different geography, identical legal structure (transboundary extraction without adequate inter-jurisdictional governance).</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>South Asian comparative case documentation for her ECS water preservation project — Kaliakoir as a parallel inter-jurisdictional water governance failure alongside her Greater Bay Area analysis; Bangladesh empirical data on AI infrastructure water extraction as a new category of cross-boundary water security threat.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Dr. Chong <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check law.cuhk.edu.hk/app/people/prof-agnes-chong]<br><strong>Subject:</strong> Inter-jurisdictional Water Preservation, AI Infrastructure &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Dr Chong,
+
+I write with reference to your ECS-funded research project on inter-jurisdictional cooperation on water preservation in the Greater Bay Area and your broader work on the evolving legal regime of climate governance — work I have engaged with closely in developing my research on AI-driven water externalities.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh, developing a research proposal titled 'Fundamental Right, Directive Aspiration: A Constitutional Proportionality Assessment of AI-Driven Water Externalities Against Bangladeshi University Students' Right to Education.' The proposal addresses AI data centre operators at Bangladesh's Kaliakoir Hi-Tech Park extracting groundwater — creating a transboundary water security harm that existing inter-jurisdictional legal frameworks do not cover and cannot allocate responsibility for. My forthcoming book chapter 'Governing the Invisible Giant: TWAIL, the Energy-Water Nexus, and the International Legal Void in AI Infrastructure' (IGI Global, © 2026, marked "Recommended" by Professor Lawrence B. Solum) addresses the investment treaty dimension of the same governance void. I have also published on TWAIL and climate reparations (RAPID, Vol. 7, Issue 2) and climate loss-and-damage accountability (Daengku Journal, under minor revision).
+
+The connection I want to draw is structural. Your ECS project on inter-jurisdictional water preservation and security in the Greater Bay Area is addressing the same legal governance failure my Kaliakoir case documents — cross-boundary water extraction without adequate inter-jurisdictional responsibility allocation — in different geographies. Your project covers a water-rich region becoming water-stressed due to extraction pressure; my case covers a water-vulnerable delta facing AI-driven extraction on top of existing climate stress. The legal structure of the governance failure is identical; the empirical contexts are comparative.
+
+What I recognise as my limitation is the inter-jurisdictional governance framework depth: I can document the harm and the constitutional proportionality dimension; I cannot yet situate it within the broader cross-jurisdictional water cooperation legal architecture your project is building.
+
+I humbly request the opportunity to contribute to your research voluntarily — specifically by providing South Asian comparative case documentation for your water preservation project, with Kaliakoir as a parallel inter-jurisdictional water governance failure for your comparative framework. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 9. GABRIEL ECKSTEIN — TEXAS A&M ═══════════════════════ -->
+<div class="card" data-cluster="water" data-search="eckstein texas A&M groundwater transboundary water law international blog">
+  <div class="card-top">
+    <span class="star-badge s2">⭐⭐ Water Tier 1 — Transboundary Groundwater Law Expert</span>
+    <span class="cluster-tag cl-water">Water / Groundwater</span>
+    <h3>Prof. Gabriel Eckstein</h3>
+    <div class="role">Professor; Director, Energy, Environmental &amp; Natural Resource Systems Law Program</div>
+    <div class="univ">Texas A&amp;M School of Law (USA) · QS Top 200; Editor, International Water Law Blog</div>
+    <div class="email-row">Email: <a href="#">Check law.tamu.edu/faculty</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Named specialisation: "international law of transboundary groundwater resources" — directly relevant to Kaliakoir and Barind Tract groundwater depletion. Editor of the widely-read International Water Law Blog. Associate Editor, Brill International Water Law Series. Editorial Board, Journal of Water Law (2014–present). Co-authored "Extraordinary Drought Provision and the Future of the Rio Grande water deliveries under the 1944 US–Mexico water treaty" (with Rosario Sanchez &amp; Stephen P. Mumme). Also: Lawrence B. Solum (who recommended Tusher's Invisible Giant chapter) is also at Texas A&amp;M — institutional connection already exists.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 CDT</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">7:00–9:00 PM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points</h4>
+      <p>His named speciality — "international law of transboundary groundwater resources" — is the exact legal category your Kaliakoir and Barind Tract groundwater depletion argument requires. His US–Mexico transboundary groundwater treaty analysis offers a directly transferable analytical template for the Bangladesh–transnational AI operator groundwater dispute. The International Water Law Blog is also an immediate publication outlet for your empirical documentation. <strong>Note:</strong> Lawrence B. Solum (who marked your Invisible Giant chapter "Recommended") is also at Texas A&amp;M — mention this connection.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>Bangladesh-specific transboundary groundwater depletion case documentation (Kaliakoir, Barind Tract) for his International Water Law Blog and research programme; South Asian AI infrastructure groundwater extraction as a novel category for his transboundary groundwater law framework — the first documented case of AI capital causing transboundary groundwater harm in a developing state.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Prof. Eckstein <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check law.tamu.edu/faculty/faculty-profiles/gabriel-eckstein.html]<br><strong>Subject:</strong> Transboundary Groundwater Law, AI Infrastructure &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Professor Eckstein,
+
+I write with reference to your scholarship on the international law of transboundary groundwater resources and your editorship of the International Water Law Blog — work I have engaged with closely in developing my research on AI-driven water externalities in Bangladesh.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh. My forthcoming book chapter 'Governing the Invisible Giant: TWAIL, the Energy-Water Nexus, and the International Legal Void in AI Infrastructure' (IGI Global, © 2026, co-authored with Associate Professor Badsha Mia) was marked "Recommended" by Professor Lawrence B. Solum at Texas A&M — I understand he may be a colleague of yours. The chapter addresses AI data centre operators at Bangladesh's Kaliakoir Hi-Tech Park extracting groundwater from a water table whose depletion is already documented (150 to 300+ feet below ground level in some areas), under investment treaty protections that produce regulatory chill. I am also developing a research proposal, 'Fundamental Right, Directive Aspiration,' which assesses the constitutional proportionality of this water extraction against Bangladesh's justiciable right to life and water security. Additional published work includes a TWAIL climate reparations paper (RAPID, Vol. 7, Issue 2) and a loss-and-damage paper under minor revision.
+
+The connection I want to identify is precise. Your named speciality — "international law of transboundary groundwater resources" — is the exact legal category the Kaliakoir situation requires for its analysis. Your US–Mexico Rio Grande treaty analysis provides a directly transferable analytical template: in both cases, existing treaty architecture fails to account for a new category of resource extraction pressure. The Bangladesh AI infrastructure case is the developing-state equivalent of the exceptional-drought extraction scenario your scholarship addresses — documented harm, legal vacuum, no operative responsibility framework.
+
+What I recognise as my limitation is the transboundary water law depth: I can document the harm empirically and address the constitutional dimension; I cannot yet situate it fully within the transboundary groundwater law framework your scholarship has built.
+
+I humbly request the opportunity to contribute to your research voluntarily — specifically by providing Bangladesh-specific transboundary groundwater depletion case documentation (Kaliakoir, Barind Tract) for your research programme and the International Water Law Blog, and comparative analysis positioning AI infrastructure groundwater extraction as a novel category for your framework. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 10. JOHANNES REICH — ZURICH ═══════════════════════════ -->
+<div class="card" data-cluster="dual climate" data-search="reich zurich constitutional climate litigation dual P7 water">
+  <div class="card-top">
+    <span class="star-badge s2">⭐⭐ Dual Match — Constitutional Climate Litigation</span>
+    <span class="cluster-tag cl-dual">Both Proposals</span>
+    <h3>Prof. Dr. Johannes Reich</h3>
+    <div class="role">Professor of Public Law and European Law</div>
+    <div class="univ">University of Zurich (Switzerland)</div>
+    <div class="email-row">Email: <a href="#">Check rwi.uzh.ch/en/lehrstuehle-und-institute.html</a> <span class="es es-v">⚠ Verify</span></div>
+  </div>
+  <div class="card-body">
+    <div class="cb-section">
+      <h4>Current Research</h4>
+      <p>Works on constitutional climate litigation with a comparative dimension across Swiss, European and international law frameworks. Scholarship engages how constitutional rights adjudication frameworks resolve climate-related rights conflicts — directly relevant to the Halda P7 proposal's proportionality methodology. Also engages water governance within constitutional and international law frameworks, giving a Water Externalities Tier 2 match.</p>
+    </div>
+    <div class="timing-row">
+      <div class="tc"><div class="tl">Best Days</div><div class="tv">Tue / Wed</div></div>
+      <div class="tc"><div class="tl">Local Time</div><div class="tv">09:00–11:00 CEST</div></div>
+      <div class="tc"><div class="tl">Your Send Time</div><div class="tv bd">1:00–3:00 PM BD</div></div>
+    </div>
+    <div class="nexus-box">
+      <h4>Exact Connection Points</h4>
+      <p><strong>P7 / Halda:</strong> His comparative constitutional climate litigation methodology — how Swiss and European constitutional frameworks adjudicate competing climate rights — is directly transferable to your Article 18A/32 rights-collision analysis. Switzerland's own constitutional environmental rights framework (Art. 74) and its jurisprudence on non-justiciable environmental mandates is the closest Swiss parallel to Bangladesh's DPSP problem.<br><br>
+      <strong>Water:</strong> Constitutional water governance angle supplements your Water Externalities proportionality framework.</p>
+    </div>
+    <div class="contrib-box">
+      <h4>Your Specific Contribution</h4>
+      <p>Bangladesh comparative constitutional climate litigation case documentation — positioning the Halda rights-collision alongside Swiss (Art. 74 mandates), German (Neubauer), and Indian (DPSP) frameworks for his comparative constitutional climate litigation research; South Asian empirical grounding for his constitutional water governance methodology.</p>
+    </div>
+    <hr class="div">
+    <button class="email-btn" onclick="tog(this)">📧 Draft Email — Prof. Reich <span class="arr">▼</span></button>
+    <div class="email-panel">
+      <div class="e-meta"><strong>To:</strong> [Check University of Zurich Faculty of Law directory]<br><strong>Subject:</strong> Comparative Constitutional Climate Litigation &amp; Bangladesh — A Voluntary Research Contribution</div>
+      <div class="e-body">Dear Professor Reich,
+
+I write with reference to your scholarship on comparative constitutional climate litigation and how constitutional adjudication frameworks resolve competing rights claims under climate stress — work I have engaged with closely in developing my doctoral research proposal.
+
+I am a final-year LL.B. candidate at Noakhali Science and Technology University, Bangladesh, developing a research proposal titled 'When Rights Collide,' examining the constitutional rights collision produced by salinity intrusion in Bangladesh's Halda River Basin: Article 18A (Environmental Rights, in the non-justiciable Directive Principles) versus Article 32 (Right to Life, justiciable), with no operative constitutional mechanism to adjudicate between them. My published and forthcoming work includes a TWAIL climate reparations paper (RAPID, Vol. 7, Issue 2), a loss-and-damage paper under minor revision, and two IGI Global book chapters on AI governance — including 'Governing the Invisible Giant,' marked "Recommended" by Professor Lawrence B. Solum (Texas A&M).
+
+The connection I want to identify is methodological. Your comparative constitutional climate litigation scholarship — specifically how Swiss constitutional law (Article 74 environmental protection mandates and their non-justiciable dimensions) and European human rights frameworks adjudicate competing climate-related rights claims — offers the closest existing comparative methodology for my Halda analysis. Bangladesh's DPSP structure (in which Article 18A sits) mirrors the Swiss constitutional non-justiciable mandate architecture more closely than the German or Indian frameworks my proposal also draws on. Your comparative work across these systems is what positions my analysis within a framework an Oxford or Cambridge MPhil committee would recognise as methodologically rigorous.
+
+What I recognise as my limitation is the comparative constitutional depth: I can describe Bangladesh's collision precisely; I cannot yet execute the cross-system proportionality analysis your scholarship demonstrates.
+
+I humbly request the opportunity to contribute to your research voluntarily — specifically through Bangladesh comparative constitutional climate litigation documentation, positioning the Halda rights-collision within the Swiss, German, and Indian frameworks your scholarship has already mapped. If you are willing to offer that opportunity, I would be deeply grateful. I would be happy to share any of the papers mentioned above should you wish to review them.
+
+With sincere respect,
+Tanvir Ahmed Tusher
+LL.B. Candidate, Noakhali Science and Technology University, Bangladesh
+tusher.law@gmail.com | [ORCID] | [Google Scholar]</div>
+      <button class="copy-btn" onclick="cp(this)">Copy Email</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /grid -->
+</div><!-- /wrap -->
+
+<footer>
+  10 Super Standout Scholars extracted from 13 research batches · All emails ⚠ Verify on listed profile page before sending · Best send window: Tuesday–Wednesday<br>
+  Email style: tailored nexus-first format (not generic funding inquiry) · Attach CV as PDF · Add "I would be happy to share papers should you wish to review them" is already included in each draft
+</footer>
+
+<script>
+function tog(btn){
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('vis');
+}
+function cp(btn){
+  const txt = btn.previousElementSibling.textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.textContent='✓ Copied';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='Copy Email';btn.classList.remove('ok');},2200);
+  });
+}
+function filter(cluster, btn){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#grid .card').forEach(c=>{
+    if(cluster==='all'){c.classList.remove('hidden');return;}
+    c.classList.toggle('hidden', !c.dataset.cluster.includes(cluster));
+  });
+}
+function search(val){
+  const q = val.toLowerCase();
+  document.querySelectorAll('#grid .card').forEach(c=>{
+    c.classList.toggle('hidden', q.length>0 && !c.dataset.search.toLowerCase().includes(q));
+  });
+  if(q.length>0){
+    document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.fbtn').classList.add('active');
+  }
+}
+</script>
+</body>
+</html>

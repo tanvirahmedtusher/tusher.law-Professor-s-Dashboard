@@ -6,9 +6,7 @@
   <title>ScholarFlow - Academic Research &amp; Outreach Ecosystem</title>
   <meta name="description" content="Unified SaaS dashboard for academic outreach, research alignment, pipeline stages, and scholar intelligence.">
   
-  <!-- Security Headers -->
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-Frame-Options" content="DENY">
+  <!-- Security & Privacy -->
   <meta name="referrer" content="strict-origin-when-cross-origin">
   
   <!-- Mobile & PWA Optimization -->
@@ -25,8 +23,11 @@
   <!-- Google Fonts: Inter & Source Serif 4 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400..700&display=swap" rel="stylesheet">
+  
+  <!-- UMD lib for .docx & .pdf extraction for Correspondence Composer -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.11.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   
   <!-- App Stylesheet -->
   <link rel="stylesheet" href="styles.css">
@@ -75,6 +76,15 @@
           </svg>
           <span>Overview</span>
         </button>
+        
+        <a href="landing.html" class="nav-item" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Landing Page</span>
+          <span class="nav-badge" style="background:#EFF6FF;color:#2563EB;font-weight:700;">PRO</span>
+        </a>
         
         <button class="nav-item" data-view="scholars" onclick="switchView('scholars')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -160,6 +170,15 @@
           </svg>
           <span>AI Search</span>
           <span class="nav-badge" style="background:var(--gold-bg);color:var(--gold);">AI</span>
+        </button>
+        
+        <button class="nav-item" data-view="composer" onclick="switchView('composer')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <span>Email Generator</span>
+          <span class="nav-badge" style="background:var(--primary-light);color:var(--primary);">AI</span>
         </button>
         
         <div class="sidebar-divider"></div>
@@ -868,6 +887,372 @@
           </div>
         </section>
 
+        <!-- ─── 12. CORRESPONDENCE COMPOSER / EMAIL GENERATOR VIEW ───────── -->
+        <section id="view-composer" class="view-section">
+          <div class="composer-container">
+            
+            <!-- Composer Masthead -->
+            <div class="composer-masthead">
+              <div class="composer-masthead-top">
+                <div>
+                  <div class="composer-brand-kicker">Academic Outreach &middot; Precision Correspondence Engine</div>
+                  <h2 class="composer-brand-title">✉️ Correspondence Composer</h2>
+                  <p class="composer-brand-sub">
+                    Grounded strictly in your <strong>2 verified research proposals</strong> and tailored dossiers from <strong>super_standout_dashboard.html</strong>. Every draft is shaped by academic nexus formulas — no generic filler, no unverified titles.
+                  </p>
+                </div>
+                <div class="composer-masthead-actions">
+                  <div class="composer-scholar-picker-wrap">
+                    <label for="cmp-view-scholar-select" class="cmp-picker-label">Target Scholar:</label>
+                    <select id="cmp-view-scholar-select" class="custom-select cmp-scholar-select" onchange="loadScholarIntoComposer(this.value)">
+                      <option value="">-- Select a Professor (232 available) --</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-Navigation Tab Switcher -->
+              <div class="composer-subnav-tabs">
+                <button type="button" class="composer-subtab-btn active" id="subtab-btn-generator" onclick="switchComposerSubTab('generator')">
+                  <span>✨</span> <span>Precision Email Composer</span>
+                </button>
+                <button type="button" class="composer-subtab-btn" id="subtab-btn-superstandout" onclick="switchComposerSubTab('superstandout')">
+                  <span>⭐</span> <span>Super Standout Dossier (10 Elaborated Emails)</span>
+                </button>
+                <button type="button" class="composer-subtab-btn" id="subtab-btn-proposals" onclick="switchComposerSubTab('proposals')">
+                  <span>📜</span> <span>The 2 Core Research Proposals</span>
+                </button>
+              </div>
+
+              <!-- Programme Type Toggle (for generator tab) -->
+              <div class="composer-prog-toggle-wrap" id="cmp-prog-toggle-wrapper">
+                <div class="prog-toggle" role="tablist" aria-label="Programme type">
+                  <button type="button" class="active" data-prog="phd" onclick="setComposerProg('phd')" role="tab" aria-selected="true">PhD Supervision</button>
+                  <button type="button" data-prog="masters" onclick="setComposerProg('masters')" role="tab" aria-selected="false">Master's / Funding Inquiry</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 1: Generator Workspace -->
+            <div id="composer-subtab-generator" class="composer-subtab-content active">
+              <div class="composer-workspace">
+                <form id="composer-main-form" onsubmit="event.preventDefault();">
+                  <div class="composer-grid">
+                    
+                    <!-- Left Column: Your Profile -->
+                    <fieldset class="composer-fieldset">
+                      <legend>Your Profile &amp; Research Dossier</legend>
+                      
+                      <div class="cmp-field">
+                        <label for="cmp-yourName">Full Name <span class="required-mark">*</span></label>
+                        <input type="text" id="cmp-yourName" required placeholder="Your full name">
+                      </div>
+
+                      <div class="cmp-row2">
+                        <div class="cmp-field">
+                          <label for="cmp-yourStatus">Current Status</label>
+                          <input type="text" id="cmp-yourStatus" placeholder="e.g. LL.B. Final-Year Student, MPhil Researcher">
+                        </div>
+                        <div class="cmp-field">
+                          <label for="cmp-yourInstitution">Institution</label>
+                          <input type="text" id="cmp-yourInstitution" placeholder="Your current university">
+                        </div>
+                      </div>
+
+                      <div class="cmp-field">
+                        <label for="cmp-yourField">Your Research Interest / Field <span class="required-mark">*</span></label>
+                        <input type="text" id="cmp-yourField" required placeholder="e.g. Public International Law, AI Governance, Climate Displacement">
+                      </div>
+
+                      <!-- Strict Core Proposal Selection from super_standout_dashboard.html -->
+                      <div class="cmp-field">
+                        <label for="cmp-proposalSelect">Core Research Proposal <span class="required-mark">*</span></label>
+                        <select id="cmp-proposalSelect" class="custom-select" onchange="handleCoreProposalChange(this.value)">
+                          <option value="proposal1">Proposal 1: When Rights Collide (Halda Constitutional Rights &amp; Salinity Intrusion)</option>
+                          <option value="proposal2">Proposal 2: Fundamental Right, Directive Aspiration (AI Water Externalities &amp; Kaliakoir)</option>
+                          <option value="dual">Dual Focus: Both Interconnected Proposals (Halda + AI Water Externalities)</option>
+                        </select>
+                        <span class="cmp-hint">Strictly constrained to the 2 verified proposals from super_standout_dashboard.html.</span>
+                      </div>
+
+                      <div class="cmp-field" id="cmp-researchTitleField">
+                        <label for="cmp-researchTitle">Proposed Research Title</label>
+                        <input type="text" id="cmp-researchTitle" readonly style="background:var(--surface-hover);font-weight:600;font-size:0.8rem;color:var(--text);" placeholder="Selected proposal title">
+                        <span class="cmp-hint" id="cmp-researchTitleHint">Derived strictly from the core research proposal selected above.</span>
+                      </div>
+
+                      <div class="cmp-field">
+                      <label>CV Context <span class="cmp-hint">Optional — used as background context, not pasted verbatim</span></label>
+                      <div class="dropzone" id="cmp-dropzone" tabindex="0" role="button" aria-label="Upload CV">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+                        <p>Click or drop your CV here</p>
+                        <p class="cmp-sub">.md, .docx or .pdf (Parsed locally)</p>
+                        <input type="file" id="cmp-cvInput" accept=".md,.markdown,.docx,.pdf" style="display:none;">
+                      </div>
+                      <div class="cv-status" id="cmp-cvStatus">
+                        <span id="cmp-cvStatusText"></span>
+                        <button type="button" id="cmp-cvRemoveBtn" aria-label="Remove CV">✕</button>
+                      </div>
+                      <div class="cv-error" id="cmp-cvError"></div>
+                    </div>
+
+                    <div class="cmp-field">
+                      <label for="cmp-achievements">Key Achievements <span class="cmp-hint">One per line — publications, awards, conference papers (2–3 items)</span></label>
+                      <textarea id="cmp-achievements" rows="3" placeholder="One achievement per line"></textarea>
+                    </div>
+
+                    <div class="cmp-row3">
+                      <div class="cmp-field">
+                        <label for="cmp-asking">Seeking</label>
+                        <select id="cmp-asking">
+                          <option value="PhD supervision">PhD supervision</option>
+                          <option value="Funding &amp; scholarship information">Funding &amp; scholarship information</option>
+                          <option value="Postdoctoral / RA position">Postdoctoral / RA position</option>
+                          <option value="General admissions guidance">General admissions guidance</option>
+                        </select>
+                      </div>
+                      <div class="cmp-field">
+                        <label for="cmp-timeline">Target Intake</label>
+                        <input type="text" id="cmp-timeline" placeholder="e.g. October 2027 / Michaelmas Term">
+                      </div>
+                    </div>
+
+                    <div class="cmp-field">
+                      <label for="cmp-links">Links &amp; Portfolio <span class="cmp-hint">Optional — LinkedIn, ORCID, Google Scholar</span></label>
+                      <input type="text" id="cmp-links" placeholder="Links to include in your signature">
+                    </div>
+                  </fieldset>
+
+                  <!-- Right Column: The Professor & Fit -->
+                  <fieldset class="composer-fieldset">
+                    <legend>The Professor &amp; Your Fit</legend>
+
+                    <div class="cmp-row3">
+                      <div class="cmp-field">
+                        <label for="cmp-profTitle">Title</label>
+                        <select id="cmp-profTitle">
+                          <option value="Prof.">Prof.</option>
+                          <option value="Dr">Dr</option>
+                          <option value="Professor">Professor</option>
+                          <option value="Assoc. Prof.">Assoc. Prof.</option>
+                          <option value="Asst. Prof.">Asst. Prof.</option>
+                        </select>
+                      </div>
+                      <div class="cmp-field">
+                        <label for="cmp-profName">Last Name <span class="required-mark">*</span></label>
+                        <input type="text" id="cmp-profName" required placeholder="Their last name (e.g. Ranganathan)">
+                      </div>
+                    </div>
+
+                    <div class="cmp-field">
+                      <label for="cmp-profUni">University &amp; Department</label>
+                      <input type="text" id="cmp-profUni" placeholder="Their university and department">
+                    </div>
+
+                    <div class="cmp-search-row">
+                      <span class="cmp-search-label">Look them up:</span>
+                      <button type="button" class="btn-ghost" id="cmp-searchGoogleBtn" onclick="searchCurrentProfGoogle()">Google ↗</button>
+                      <button type="button" class="btn-ghost" id="cmp-searchScholarBtn" onclick="searchCurrentProfScholar()">Google Scholar ↗</button>
+                      <button type="button" class="btn-ghost" id="cmp-aiResearchBtn" onclick="researchCurrentProfAI()">✨ Research with AI</button>
+                    </div>
+                    <div class="research-loading" id="cmp-researchLoading"><span class="cmp-spinner dark"></span> Searching recent academic literature…</div>
+                    <div class="research-error" id="cmp-researchError"></div>
+                    <div class="research-card" id="cmp-researchCard"></div>
+
+                    <div class="cmp-field">
+                      <label for="cmp-profWork">Their Recent Paper / Project <span class="required-mark">*</span></label>
+                      <input type="text" id="cmp-profWork" required placeholder="Title or topic of their recent paper or project">
+                    </div>
+
+                    <div class="cmp-field">
+                      <label for="cmp-profIdea">The Specific Idea or Argument that Resonates <span class="cmp-hint">Name the actual claim or method from their work</span></label>
+                      <textarea id="cmp-profIdea" rows="2" placeholder="What exactly, from their work, do you want to engage with?"></textarea>
+                    </div>
+
+                    <div class="cmp-field">
+                      <label for="cmp-profFit">How Your Work Connects to Theirs <span class="cmp-hint">Your contribution offer &amp; research bridge</span></label>
+                      <textarea id="cmp-profFit" rows="2" placeholder="The specific link between what you've done and what they work on"></textarea>
+                    </div>
+
+                    <div class="cmp-field">
+                      <label for="cmp-profNote">Acknowledgment / Honor <span class="cmp-hint">Optional — recent prize, award, chair appointment</span></label>
+                      <input type="text" id="cmp-profNote" placeholder="A recent honour, appointment, or vacancy note">
+                    </div>
+
+                    <div class="cmp-tone-row" role="radiogroup" aria-label="Tone">
+                      <span class="cmp-tone-label">Tone:</span>
+                      <button type="button" class="tone-chip active" data-tone="formal" onclick="setComposerTone('formal')">Formal</button>
+                      <button type="button" class="tone-chip" data-tone="warm" onclick="setComposerTone('warm')">Warm-formal</button>
+                      <button type="button" class="tone-chip" data-tone="direct" onclick="setComposerTone('direct')">Direct &amp; brief</button>
+                    </div>
+                  </fieldset>
+
+                </div>
+
+                <!-- Framework Accordion -->
+                <button type="button" class="framework-toggle" id="cmp-frameworkToggle" onclick="toggleComposerFramework()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  <span>View the Academic Correspondence Framework this follows</span>
+                </button>
+                <div class="framework-panel" id="cmp-frameworkPanel">
+                  <div class="framework-inner" id="cmp-frameworkInner"></div>
+                </div>
+
+                <!-- Generation Trigger Button -->
+                <div class="generate-row">
+                  <button type="button" id="cmp-generateBtn" onclick="generateCorrespondenceEmail()">
+                    <span class="cmp-spinner" id="cmp-btnSpinner" style="display:none;"></span>
+                    <span class="btn-arrow" id="cmp-btnArrow">Generate Email Draft →</span>
+                    <span class="btn-label" id="cmp-btnLabel" style="display:none;">Composing Draft…</span>
+                  </button>
+                  <span id="cmp-formMsg" class="cmp-form-msg">Please fill in the required fields marked with * first.</span>
+                </div>
+              </form>
+            </div>
+
+            <!-- Output Section -->
+            <section class="composer-output" id="cmp-outputSection">
+              <div class="output-card">
+                <div class="output-head">
+                  <div style="display:flex;align-items:center;gap:0.6rem;">
+                    <span style="font-size:1.2rem;">📝</span>
+                    <h3 style="margin:0;font-size:1.15rem;font-weight:700;">Your Outreach Draft</h3>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <span class="wordcount" id="cmp-wordCount">0 words</span>
+                    <span class="wordcount" id="cmp-charCount" style="color:var(--text-subtle);">0 chars</span>
+                  </div>
+                </div>
+
+                <div class="subject-row">
+                  <span class="subj-label">Subject</span>
+                  <input type="text" id="cmp-subjectField" placeholder="Generated subject line...">
+                </div>
+
+                <textarea id="cmp-bodyField" rows="12" placeholder="Generated email body will appear here..."></textarea>
+
+                <div class="output-actions">
+                  <button class="btn-ghost" id="cmp-copySubjectBtn" onclick="copyComposerSubject()">📋 Copy Subject</button>
+                  <button class="btn-ghost" id="cmp-copyBodyBtn" onclick="copyComposerBody()">📋 Copy Body</button>
+                  <button class="btn-ghost" id="cmp-copyAllBtn" onclick="copyComposerAll()">📋 Copy Subject &amp; Body</button>
+                  <button class="btn-ghost" id="cmp-mailtoBtn" onclick="openComposerMailto()">✉️ Open in Mail App</button>
+                  <button class="btn-ghost" id="cmp-regenBtn" onclick="generateCorrespondenceEmail()">🔄 Regenerate</button>
+                  <button class="btn-ghost" id="cmp-saveStageBtn" onclick="saveDraftToActiveScholar()">📌 Mark Outreach Started</button>
+                </div>
+
+                <div id="cmp-errorBanner" class="composer-banner"></div>
+              </div>
+            </section>
+            </div><!-- /composer-subtab-generator -->
+
+            <!-- TAB 2: Embedded Super Standout Dashboard Webpage -->
+            <div id="composer-subtab-superstandout" class="composer-subtab-content">
+              <div class="superstandout-webpage-wrapper">
+                <div class="superstandout-toolbar">
+                  <div class="superstandout-toolbar-info">
+                    <span class="badge-gold">⭐ Standout Repository</span>
+                    <strong>10 Elaborated Tailored Emails &amp; Precision Dossiers</strong>
+                    <span class="text-muted" style="font-size:0.75rem;">(Extracted from 13 research batches across QS Top 150)</span>
+                  </div>
+                  <div class="superstandout-toolbar-actions">
+                    <a href="super_standout_dashboard.html" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size:0.75rem;padding:0.35rem 0.75rem;text-decoration:none;">
+                      <span>↗</span> <span>Open in Dedicated Window</span>
+                    </a>
+                    <button type="button" class="btn btn-secondary" onclick="reloadSuperStandoutFrame()" style="font-size:0.75rem;padding:0.35rem 0.75rem;">
+                      <span>⟳</span> <span>Reload Webpage</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Embedded Interactive Webpage Frame -->
+                <div class="superstandout-frame-container">
+                  <iframe src="super_standout_dashboard.html" id="super-standout-frame" class="superstandout-iframe" title="Super Standout Professors Interactive Dashboard"></iframe>
+                </div>
+              </div>
+            </div><!-- /composer-subtab-superstandout -->
+
+            <!-- TAB 3: Verified Core Research Proposals Dossier -->
+            <div id="composer-subtab-proposals" class="composer-subtab-content">
+              <div class="core-proposals-dossier">
+                <div class="proposals-dossier-header">
+                  <span class="tag tag-qs" style="background:var(--primary-light);color:var(--primary);font-size:0.72rem;font-weight:700;">Verified Ground Truth</span>
+                  <h3 style="margin:0.4rem 0 0.2rem;font-size:1.25rem;font-weight:800;color:var(--text);">The 2 Core Research Proposals</h3>
+                  <p style="margin:0;font-size:0.82rem;color:var(--text-muted);line-height:1.5;">
+                    All academic outreach and email generation is strictly anchored in these two verified doctoral research proposals. No speculative titles are used.
+                  </p>
+                </div>
+
+                <div class="proposals-dossier-grid">
+                  
+                  <!-- Proposal 1 Card -->
+                  <div class="proposal-dossier-card">
+                    <div class="p-card-badge" style="background:var(--purple-lt);color:var(--purple);border:1px solid #d4c7eb;">PROPOSAL 1 &middot; CONSTITUTIONAL CLIMATE RIGHTS (P7)</div>
+                    <h4 class="p-card-title">When Rights Collide: A Constitutional Proportionality Assessment of Environmental Rights (Article 18A) versus Right to Life (Article 32) Under Salinity Intrusion at Halda River Basin</h4>
+                    
+                    <div class="p-card-section">
+                      <div class="p-card-label">Core Doctrinal Conflict</div>
+                      <p class="p-card-text">
+                        Investigates the constitutional rights collision produced by salinity intrusion in Bangladesh's Halda River Basin: <strong>Article 18A</strong> (Environmental Protection, situated in non-justiciable Directive Principles) versus <strong>Article 32</strong> (Right to Life, justiciable fundamental right) versus community livelihood rights — all held by the same community with no operative constitutional adjudication mechanism.
+                      </p>
+                    </div>
+
+                    <div class="p-card-section">
+                      <div class="p-card-label">Key Doctrinal Anchors &amp; Comparative Jurisprudence</div>
+                      <div class="p-tags-wrap">
+                        <span class="p-tag">Bangladesh Constitution Arts. 18A &amp; 32</span>
+                        <span class="p-tag">ECR 1997 Rule 7</span>
+                        <span class="p-tag">Aarhus Convention Art. 9(3) Standard</span>
+                        <span class="p-tag">German BVerfG 2021 (Neubauer) Proportionality</span>
+                        <span class="p-tag">Indian DPSP (Samatha &amp; Niyamgiri)</span>
+                        <span class="p-tag">Swiss Constitution Art. 74 Mandates</span>
+                      </div>
+                    </div>
+
+                    <div class="p-card-footer">
+                      <button type="button" class="btn btn-primary" style="width:100%;font-size:0.8rem;padding:0.5rem;" onclick="applyCoreProposalToComposer('proposal1')">
+                        <span>✨</span> <span>Use Proposal 1 in Email Generator</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Proposal 2 Card -->
+                  <div class="proposal-dossier-card">
+                    <div class="p-card-badge" style="background:var(--teal-lt);color:var(--teal);border:1px solid #bce2e2;">PROPOSAL 2 &middot; AI INFRASTRUCTURE &amp; WATER EXTERNALITIES</div>
+                    <h4 class="p-card-title">Fundamental Right, Directive Aspiration: A Constitutional Proportionality Assessment of AI-Driven Water Externalities Against Bangladeshi University Students' Right to Education</h4>
+                    
+                    <div class="p-card-section">
+                      <div class="p-card-label">Core Governance Void</div>
+                      <p class="p-card-text">
+                        Documents a novel category of resource governance failure: AI data centres at Bangladesh's <strong>Kaliakoir Hi-Tech Park</strong> extracting groundwater without regulatory accounting, assessing whether the state's directive interest in digital education survives structured proportionality scrutiny against the justiciable right to life and water security in a water-stressed developing delta.
+                      </p>
+                    </div>
+
+                    <div class="p-card-section">
+                      <div class="p-card-label">Key Doctrinal Anchors &amp; Governance Frameworks</div>
+                      <div class="p-tags-wrap">
+                        <span class="p-tag">Transboundary Groundwater Law</span>
+                        <span class="p-tag">1996 Ganges Treaty &amp; Indus Waters Treaty</span>
+                        <span class="p-tag">Precautionary Principle &amp; Burden-Shifting</span>
+                        <span class="p-tag">Planetary Boundaries (Freshwater Use)</span>
+                        <span class="p-tag">TWAIL &amp; Energy-Water Nexus</span>
+                        <span class="p-tag">Solum-Recommended 'Invisible Giant' Chapter</span>
+                      </div>
+                    </div>
+
+                    <div class="p-card-footer">
+                      <button type="button" class="btn btn-primary" style="width:100%;font-size:0.8rem;padding:0.5rem;" onclick="applyCoreProposalToComposer('proposal2')">
+                        <span>✨</span> <span>Use Proposal 2 in Email Generator</span>
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div><!-- /composer-subtab-proposals -->
+
+          </div>
+        </section>
+
       </div>
     </main>
 
@@ -1256,14 +1641,52 @@
       </div>
     </div>
 
+    <!-- ====================================================================
+         CORRESPONDENCE COMPOSER / EMAIL GENERATOR POPUP MODAL
+         ==================================================================== -->
+    <div class="ledger-modal-backdrop composer-modal-backdrop" id="email-composer-modal-backdrop" onclick="closeEmailComposerModal()">
+      <div class="ledger-modal composer-modal-dialog" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+        
+        <div class="ledger-modal-head composer-modal-head">
+          <div class="composer-modal-header-title">
+            <div class="composer-modal-icon">✉️</div>
+            <div>
+              <h3 id="composer-modal-title" style="margin:0;font-size:1.1rem;font-weight:800;color:var(--text);">Correspondence Composer</h3>
+              <div id="composer-modal-subtitle" style="font-size:0.75rem;color:var(--text-muted);">Academic Outreach &middot; Framework-Backed Drafting</div>
+            </div>
+          </div>
+          
+          <div class="composer-modal-header-actions">
+            <div class="composer-modal-scholar-picker">
+              <select id="cmp-modal-scholar-select" class="custom-select" style="font-size:0.75rem;max-width:240px;" onchange="loadScholarIntoComposer(this.value, true)">
+                <option value="">-- Choose Target Professor --</option>
+              </select>
+            </div>
+            <button class="drawer-close-btn" onclick="closeEmailComposerModal()" aria-label="Close Composer Modal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="ledger-modal-body composer-modal-body" id="composer-modal-body-container">
+          <!-- Injected/Synchronized with Composer State -->
+          <div id="composer-modal-inner-form"></div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Global Toast Notification -->
     <div class="toast" id="app-toast"></div>
 
   </div>
 
   <!-- Load App Data and Logic -->
-  <script src="profile-data.js" defer></script>
-  <script src="data.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="profile-data.js?v=2.3"></script>
+  <script src="data.js?v=2.3"></script>
+  <script src="app.js?v=2.3"></script>
 </body>
 </html>

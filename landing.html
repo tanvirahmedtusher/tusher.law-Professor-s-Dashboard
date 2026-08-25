@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>ScholarFlow — Think, Plan, and Track Academic Outreach</title>
+  <meta name="description" content="Intelligently discover professors, compose research-grounded outreach, track 54+ global scholarships, and manage PhD application deadlines in one cohesive ecosystem.">
+  <meta name="theme-color" content="#2563EB">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232563EB%22/><circle cx=%2235%22 cy=%2235%22 r=%2210%22 fill=%22%2338BDF8%22/><circle cx=%2265%22 cy=%2235%22 r=%2210%22 fill=%22white%22/><circle cx=%2235%22 cy=%2265%22 r=%2210%22 fill=%22white%22/><circle cx=%2265%22 cy=%2265%22 r=%2210%22 fill=%22white%22/></svg>">
+
+  <!-- Google Fonts: Inter & Source Serif 4 & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,800;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CHRONOTASK-INSPIRED SCHOLARFLOW DESIGN SYSTEM
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Brand Colorways (Crisp Modern Blue & Indigo with Warm Accents) */
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      --primary-light: #EFF6FF;
+      --primary-glow: rgba(37, 99, 235, 0.28);
+      --cyan-dot: #0284C7;
+      --cyan-bright: #38BDF8;
+
+      --bg: #F8FAFC;
+      --bg-grid: #E2E8F0;
+      --surface: #FFFFFF;
+      --surface-subtle: #F1F5F9;
+      --surface-hover: #F8FAFC;
+
+      --border: #E2E8F0;
+      --border-focus: #2563EB;
+      --border-card: #EAEFF5;
+
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --text-light: #94A3B8;
+      --text-subtle: #CBD5E1;
+
+      --green: #10B981;
+      --green-light: #ECFDF5;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --rose: #F43F5E;
+      --rose-light: #FFE4E6;
+      --purple: #8B5CF6;
+      --purple-light: #F5F3FF;
+
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+      --shadow-float: 0 20px 40px -10px rgba(15, 23, 42, 0.12), 0 8px 16px -4px rgba(15, 23, 42, 0.04);
+      --shadow-3d: 0 16px 32px -8px rgba(37, 99, 235, 0.2), 0 8px 16px -4px rgba(15, 23, 42, 0.08);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --radius-full: 9999px;
+
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Outfit', 'Inter', sans-serif;
+      --font-serif: 'Source Serif 4', Georgia, serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Subtle Dot Matrix Canvas */
+    .bg-dot-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, #CBD5E1 1.25px, transparent 1.25px);
+      background-size: 24px 24px;
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Ambient Soft Radial Lighting */
+    .ambient-glow {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 520px;
+      background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.06) 0%, rgba(56, 189, 248, 0.03) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ==========================================================================
+       TOP NAVIGATION BAR
+       ========================================================================== */
+    .landing-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(248, 250, 252, 0.88);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+      transition: all 0.3s ease;
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    /* 4-dot geometric logo */
+    .brand-icon-matrix {
+      display: grid;
+      grid-template-columns: repeat(2, 6px);
+      gap: 4px;
+      padding: 6px;
+      background: #FFFFFF;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      border: 1px solid var(--border);
+    }
+
+    .matrix-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #0F172A;
+    }
+
+    .matrix-dot.active {
+      background: #0284C7;
+      box-shadow: 0 0 6px #38BDF8;
+    }
+
+    .brand-text {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+    }
+
+    .brand-text span {
+      color: var(--primary);
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      position: relative;
+      padding: 0.4rem 0;
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-signin-btn {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius-full);
+      transition: all 0.2s ease;
+    }
+
+    .nav-signin-btn:hover {
+      background: var(--surface-subtle);
+    }
+
+    .nav-cta-btn {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      padding: 0.6rem 1.4rem;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-cta-btn:hover {
+      border-color: var(--text-main);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    }
+
+    /* ==========================================================================
+       HERO SECTION (CHRONOTASK-ALIGNED HERO WITH FLOATING 3D WIDGETS)
+       ========================================================================== */
+    .hero-section {
+      position: relative;
+      padding: 4rem 1.5rem 6rem;
+      min-height: 860px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      overflow: visible;
+    }
+
+    .hero-canvas {
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 3D Center App Tile */
+    .hero-3d-tile {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(145deg, #FFFFFF, #F1F5F9);
+      border-radius: 20px;
+      box-shadow: 
+        0 14px 28px -6px rgba(15, 23, 42, 0.14),
+        0 6px 12px -2px rgba(15, 23, 42, 0.06),
+        inset 0 1px 2px rgba(255, 255, 255, 0.9),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      animation: floatCenterTile 5s ease-in-out infinite;
+      position: relative;
+    }
+
+    @keyframes floatCenterTile {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.02); }
+    }
+
+    .hero-3d-matrix {
+      display: grid;
+      grid-template-columns: repeat(2, 10px);
+      gap: 7px;
+    }
+
+    .hero-3d-matrix .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0F172A;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .hero-3d-matrix .dot.active {
+      background: #0284C7;
+      box-shadow: 0 0 10px #38BDF8, 0 1px 3px rgba(2, 132, 199, 0.4);
+    }
+
+    /* Hero Typography */
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      margin-bottom: 1.5rem;
+      max-width: 880px;
+    }
+
+    .hero-headline .title-dark {
+      color: #0F172A;
+      display: block;
+    }
+
+    .hero-headline .title-light {
+      color: #94A3B8;
+      font-weight: 700;
+      display: block;
+      font-family: var(--font-serif);
+      font-style: italic;
+    }
+
+    .hero-description {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .hero-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #2563EB;
+      color: #FFFFFF;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 0.95rem 2.4rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      box-shadow: 0 10px 24px -4px rgba(37, 99, 235, 0.4), 0 4px 8px -2px rgba(37, 99, 235, 0.2);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-cta-btn:hover {
+      background: #1D4ED8;
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px -4px rgba(37, 99, 235, 0.5), 0 6px 12px -2px rgba(37, 99, 235, 0.3);
+    }
+
+    .hero-cta-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* ==========================================================================
+       SURROUNDING FLOATING CARDS (Direct ChronoTask Inspiration)
+       ========================================================================== */
+
+    /* 1. TOP-LEFT: Yellow Sticky Note with Pushpin */
+    .float-widget-sticky {
+      position: absolute;
+      top: 2%;
+      left: 1%;
+      width: 250px;
+      background: #FEF9C3;
+      padding: 1.6rem 1.4rem 1.4rem;
+      border-radius: 4px;
+      box-shadow: 
+        0 14px 28px rgba(15, 23, 42, 0.08),
+        0 4px 10px rgba(15, 23, 42, 0.04);
+      transform: rotate(-5deg);
+      z-index: 2;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: floatSticky 7s ease-in-out infinite;
+    }
+
+    .float-widget-sticky:hover {
+      transform: rotate(0deg) scale(1.05);
+      z-index: 10;
+    }
+
+    @keyframes floatSticky {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-10px) rotate(-3deg); }
+    }
+
+    .pushpin-icon {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      background: #EF4444;
+      border-radius: 50%;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.25), inset 0 2px 2px rgba(255,255,255,0.4);
+    }
+
+    .pushpin-icon::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      background: #B91C1C;
+      border-radius: 50%;
+    }
+
+    .sticky-note-text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: #713F12;
+      text-align: left;
+    }
+
+    /* 2. MIDDLE-LEFT: Checkmark 3D Tile */
+    .float-widget-check {
+      position: absolute;
+      top: 36%;
+      left: 4%;
+      width: 80px;
+      height: 80px;
+      background: #FFFFFF;
+      border-radius: 18px;
+      box-shadow: 
+        0 16px 32px rgba(15, 23, 42, 0.09),
+        0 4px 10px rgba(15, 23, 42, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(6deg);
+      z-index: 2;
+      animation: floatCheck 6.5s ease-in-out infinite 1s;
+    }
+
+    @keyframes floatCheck {
+      0%, 100% { transform: translateY(0) rotate(6deg); }
+      50% { transform: translateY(-12px) rotate(8deg); }
+    }
+
+    .check-inner-box {
+      width: 44px;
+      height: 44px;
+      background: #3B82F6;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      box-shadow: 0 6px 14px rgba(59, 130, 246, 0.4);
+    }
+
+    /* 3. BOTTOM-LEFT: Today's Tasks / Outreach Card */
+    .float-widget-tasks {
+      position: absolute;
+      bottom: -4%;
+      left: 2%;
+      width: 290px;
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-float);
+      border: 1px solid var(--border-card);
+      text-align: left;
+      z-index: 3;
+      transform: rotate(-2deg);
+      animation: floatTasks 8s ease-in-out infinite 0.5s;
+    }
+
+    .float-widget-tasks:hover {
+      transform: rotate(0deg) scale(1.03);
+    }
+
+    @keyframes floatTasks {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-10px) rotate(-1deg); }
+    }
+
+    .tab-folder-header {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .task-item-row {
+      background: var(--surface-subtle);
+      border-radius: 12px;
+      padding: 0.75rem 0.85rem;
+      margin-bottom: 0.65rem;
+      border: 1px solid rgba(226, 232, 240, 0.6);
+    }
+
+    .task-item-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .task-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .task-num-badge {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+    }
+
+    .task-num-badge.red { background: #EF4444; }
+    .task-num-badge.green { background: #10B981; }
+
+    .task-name-text {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-main);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .task-date-text {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .task-progress-bar-wrap {
+      width: 85px;
+      height: 5px;
+      background: #E2E8F0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .task-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #0284C7, #38BDF8);
+    }
+
+    .task-percent-text {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-left: 0.35rem;
+    }
+
+    /* 4. TOP-RIGHT: Stopwatch & Reminders Tab Card */
+    .float-widget-reminders {
+      position: absolute;
+      top: 4%;
+      right: 2%;
+      width: 260px;
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-float);
+      border: 1px solid var(--border-card);
+      text-align: left;
+      transform: rotate(4deg);
+      z-index: 3;
+      animation: floatReminders 7s ease-in-out infinite 1.5s;
+    }
+
+    .float-widget-reminders:hover {
+      transform: rotate(0deg) scale(1.03);
+    }
+
+    @keyframes floatReminders {
+      0%, 100% { transform: translateY(0) rotate(4deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+
+    /* 3D Stopwatch Badge */
+    .stopwatch-3d-tile {
+      position: absolute;
+      top: -18px;
+      left: -24px;
+      width: 60px;
+      height: 60px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 
+        0 12px 24px rgba(15, 23, 42, 0.12),
+        0 2px 6px rgba(15, 23, 42, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-10deg);
+    }
+
+    .stopwatch-icon-wrap {
+      width: 34px;
+      height: 34px;
+      border: 2px solid #0F172A;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stopwatch-icon-wrap::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      width: 6px;
+      height: 3px;
+      background: #0F172A;
+      border-radius: 2px;
+    }
+
+    .stopwatch-hand {
+      width: 1px;
+      height: 12px;
+      background: #EF4444;
+      position: absolute;
+      top: 5px;
+      transform-origin: bottom center;
+      transform: rotate(45deg);
+    }
+
+    .reminders-category-tab {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+    }
+
+    .reminders-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .reminders-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .meeting-card-box {
+      background: var(--surface-subtle);
+      border-radius: 12px;
+      padding: 0.8rem;
+      border: 1px solid rgba(226, 232, 240, 0.6);
+    }
+
+    .meeting-title-bold {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+
+    .meeting-desc-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .meeting-time-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #E0F2FE;
+      color: #0284C7;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+
+    /* 5. BOTTOM-RIGHT: 100+ Integrations Card */
+    .float-widget-integrations {
+      position: absolute;
+      bottom: -6%;
+      right: 3%;
+      width: 270px;
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 1.2rem 1.4rem;
+      box-shadow: var(--shadow-float);
+      border: 1px solid var(--border-card);
+      text-align: left;
+      transform: rotate(2deg);
+      z-index: 3;
+      animation: floatIntegrations 8.5s ease-in-out infinite 1s;
+    }
+
+    .float-widget-integrations:hover {
+      transform: rotate(0deg) scale(1.03);
+    }
+
+    @keyframes floatIntegrations {
+      0%, 100% { transform: translateY(0) rotate(2deg); }
+      50% { transform: translateY(-10px) rotate(0deg); }
+    }
+
+    .integrations-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.85rem;
+    }
+
+    .integrations-icons-grid {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .app-icon-tile {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #FFFFFF;
+      box-shadow: 
+        0 8px 16px rgba(15, 23, 42, 0.08),
+        0 2px 4px rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .app-icon-tile:hover {
+      transform: translateY(-4px) scale(1.08);
+    }
+
+    /* ==========================================================================
+       SOCIAL PROOF / TRUSTED BY LOGO STRIP
+       ========================================================================== */
+    .proof-section {
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: relative;
+      z-index: 2;
+    }
+
+    .proof-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .proof-heading {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-light);
+      margin-bottom: 1.75rem;
+    }
+
+    .proof-logos-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .uni-pill-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      opacity: 0.75;
+      transition: all 0.2s ease;
+      cursor: default;
+    }
+
+    .uni-pill-logo:hover {
+      opacity: 1;
+      color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    .uni-badge-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       INTERACTIVE PRODUCT SHOWCASE SECTION
+       ========================================================================== */
+    .showcase-section {
+      padding: 6rem 2rem;
+      max-width: 1240px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-header-center {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .section-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      margin-bottom: 1rem;
+    }
+
+    .section-title-large {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc-muted {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Interactive Showcase Tabs */
+    .showcase-tabs-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .showcase-tab-btn {
+      padding: 0.65rem 1.4rem;
+      border-radius: var(--radius-full);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .showcase-tab-btn:hover {
+      border-color: var(--text-main);
+      color: var(--text-main);
+    }
+
+    .showcase-tab-btn.active {
+      background: var(--text-main);
+      color: #FFFFFF;
+      border-color: var(--text-main);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Showcase Stage Mockup Container */
+    .showcase-stage-mockup {
+      background: #FFFFFF;
+      border-radius: var(--radius-xl);
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow-float);
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .mockup-window-bar {
+      height: 44px;
+      background: #F8FAFC;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 1.25rem;
+      gap: 0.5rem;
+    }
+
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .window-dot.r { background: #FDA4AF; }
+    .window-dot.y { background: #FCD34D; }
+    .window-dot.g { background: #86EFAC; }
+
+    .window-url-pill {
+      margin: 0 auto;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 0.2rem 1.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .mockup-content-body {
+      padding: 2rem;
+      min-height: 420px;
+    }
+
+    .tab-content-panel {
+      display: none;
+      animation: fadeInPanel 0.4s ease both;
+    }
+
+    .tab-content-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeInPanel {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       FEATURES 6-CARD GRID
+       ========================================================================== */
+    .features-grid-section {
+      padding: 5rem 2rem 6rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .features-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.75rem;
+      margin-top: 3.5rem;
+    }
+
+    .feature-clean-card {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.75rem;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-clean-card:hover {
+      transform: translateY(-6px);
+      background: #FFFFFF;
+      box-shadow: var(--shadow-card);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .f-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .f-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
+    }
+
+    .f-card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    /* ==========================================================================
+       INTERACTIVE SCHOLARSHIP CALCULATOR / LIVE DEMO
+       ========================================================================== */
+    .demo-widget-section {
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .demo-calc-card {
+      background: linear-gradient(145deg, #FFFFFF, #F8FAFC);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      box-shadow: var(--shadow-float);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .calc-input-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .calc-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
+    }
+
+    .calc-select, .calc-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: #FFFFFF;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .calc-select:focus, .calc-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .calc-result-box {
+      background: var(--text-main);
+      color: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      position: relative;
+    }
+
+    .calc-result-val {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #38BDF8;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .calc-result-sub {
+      font-size: 0.88rem;
+      color: #94A3B8;
+      margin-bottom: 1.5rem;
+    }
+
+    .calc-result-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .calc-result-items li {
+      font-size: 0.85rem;
+      color: #E2E8F0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ==========================================================================
+       PRICING TIERS
+       ========================================================================== */
+    .pricing-section {
+      padding: 6rem 2rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .pricing-container {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .pricing-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3.5rem;
+    }
+
+    .pricing-box {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .pricing-box:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-float);
+    }
+
+    .pricing-box.featured {
+      background: #FFFFFF;
+      border-color: #2563EB;
+      box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
+    }
+
+    .featured-ribbon {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: #2563EB;
+      color: #FFFFFF;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-full);
+    }
+
+    .p-tier-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .p-price-amount {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.5rem;
+    }
+
+    .p-price-amount span {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .p-tier-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.75rem;
+    }
+
+    .p-features-list {
+      list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .p-features-list li {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .p-check-bullet {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #EFF6FF;
+      color: #2563EB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .p-cta-btn {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: block;
+    }
+
+    .p-btn-secondary {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border: 1.5px solid var(--border);
+    }
+
+    .p-btn-secondary:hover {
+      border-color: var(--text-main);
+      background: var(--surface-subtle);
+    }
+
+    .p-btn-primary {
+      background: #2563EB;
+      color: #FFFFFF;
+      border: none;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    }
+
+    .p-btn-primary:hover {
+      background: #1D4ED8;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    /* ==========================================================================
+       CONVERSION BANNER & FOOTER
+       ========================================================================== */
+    .conversion-cta-wrap {
+      padding: 6rem 2rem;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .cta-banner-box {
+      max-width: 960px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      border-radius: var(--radius-xl);
+      padding: 4.5rem 3rem;
+      text-align: center;
+      color: #FFFFFF;
+      box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-banner-box h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+
+    .cta-banner-box p {
+      font-size: 1.1rem;
+      color: #94A3B8;
+      max-width: 580px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    .footer-clean {
+      background: #FFFFFF;
+      border-top: 1px solid var(--border);
+      padding: 4rem 2rem 2rem;
+    }
+
+    .footer-inner-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .footer-brand-bio p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-top: 1rem;
+      max-width: 320px;
+    }
+
+    .footer-col-header {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-main);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .footer-links-list a {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links-list a:hover {
+      color: var(--primary);
+    }
+
+    .footer-sub-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-sub-bar span {
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    /* ==========================================================================
+       RESPONSIVENESS
+       ========================================================================== */
+    @media (max-width: 1100px) {
+      .float-widget-sticky { display: none; }
+      .float-widget-check { display: none; }
+      .float-widget-tasks { display: none; }
+      .float-widget-reminders { display: none; }
+      .float-widget-integrations { display: none; }
+      .calc-grid { grid-template-columns: 1fr; }
+      .footer-inner-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu, .nav-signin-btn { display: none; }
+      .hero-section { padding: 3rem 1rem 4rem; min-height: auto; }
+      .showcase-stage-mockup { border-radius: var(--radius-lg); }
+      .mockup-content-body { padding: 1.25rem; }
+      .footer-inner-grid { grid-template-columns: 1fr; }
+      .footer-sub-bar { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Dot Pattern & Ambient Lighting -->
+  <div class="bg-dot-pattern"></div>
+  <div class="ambient-glow"></div>
+
+  <!-- ==========================================================================
+       TOP NAVIGATION
+       ========================================================================== -->
+  <header class="landing-nav" id="mainNav">
+    <div class="nav-container">
+      <a href="landing.html" class="nav-brand">
+        <div class="brand-icon-matrix">
+          <div class="matrix-dot active"></div>
+          <div class="matrix-dot"></div>
+          <div class="matrix-dot"></div>
+          <div class="matrix-dot"></div>
+        </div>
+        <span class="brand-text">Scholar<span>Flow</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#demo" class="nav-link">Live Demo</a></li>
+          <li><a href="#scholarships" class="nav-link">Scholarships</a></li>
+          <li><a href="#pricing" class="nav-link">Pricing</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="index.html" class="nav-signin-btn">Sign in</a>
+        <a href="index.html" class="nav-cta-btn">Get demo</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       HERO SECTION (DIRECT CHRONOTASK INSPIRATION)
+       ========================================================================== */
+  -->
+  <section class="hero-section">
+    <div class="hero-canvas">
+
+      <!-- Center 3D Tile -->
+      <div class="hero-3d-tile">
+        <div class="hero-3d-matrix">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <!-- Main Headline (Two-Tone Contrast) -->
+      <h1 class="hero-headline">
+        <span class="title-dark">Think, plan, and track</span>
+        <span class="title-light">all in one place</span>
+      </h1>
+
+      <p class="hero-description">
+        Intelligently discover professors, compose research-grounded outreach, and track global scholarships with ease.
+      </p>
+
+      <a href="index.html" class="hero-cta-btn">
+        <span>Get free demo</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+
+      <!-- 1. Top-Left: Yellow Sticky Note with Pushpin -->
+      <div class="float-widget-sticky">
+        <div class="pushpin-icon"></div>
+        <p class="sticky-note-text">
+          Take notes to keep track of crucial details, professor publications, and accomplish more tasks with ease.
+        </p>
+      </div>
+
+      <!-- 2. Middle-Left: Checkmark 3D Tile -->
+      <div class="float-widget-check">
+        <div class="check-inner-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 3. Bottom-Left: Today's Tasks / Outreach Card -->
+      <div class="float-widget-tasks">
+        <div class="tab-folder-header">
+          <span>Today's tasks</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);">2 active</span>
+        </div>
+
+        <div class="task-item-row">
+          <div class="task-title-wrap">
+            <div class="task-num-badge red">8</div>
+            <span class="task-name-text">Oxford Proposal Outreach</span>
+          </div>
+          <div class="task-meta-row">
+            <span class="task-date-text">Sep 10</span>
+            <div style="display:flex;align-items:center;">
+              <div class="task-progress-bar-wrap">
+                <div class="task-progress-fill" style="width: 60%;"></div>
+              </div>
+              <span class="task-percent-text">60%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="task-item-row">
+          <div class="task-title-wrap">
+            <div class="task-num-badge green">3</div>
+            <span class="task-name-text">Chevening Fellowship Draft</span>
+          </div>
+          <div class="task-meta-row">
+            <span class="task-date-text">Sep 18</span>
+            <div style="display:flex;align-items:center;">
+              <div class="task-progress-bar-wrap">
+                <div class="task-progress-fill" style="width: 92%; background: linear-gradient(90deg, #10B981, #34D399);"></div>
+              </div>
+              <span class="task-percent-text">92%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Top-Right: Reminders & Stopwatch Card -->
+      <div class="float-widget-reminders">
+        <div class="stopwatch-3d-tile">
+          <div class="stopwatch-icon-wrap">
+            <div class="stopwatch-hand"></div>
+          </div>
+        </div>
+
+        <div class="reminders-category-tab">
+          <span class="reminders-title">Reminders</span>
+          <span class="reminders-sub">Meetings</span>
+        </div>
+
+        <div class="meeting-card-box">
+          <div class="meeting-title-bold">Supervisor Call</div>
+          <div class="meeting-desc-sub">With Prof. Sarah Mitchell</div>
+          <div class="meeting-time-pill">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>13:00 - 13:45</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Bottom-Right: 100+ Integrations Card -->
+      <div class="float-widget-integrations">
+        <div class="integrations-label">100+ Integrations</div>
+        <div class="integrations-icons-grid">
+          <!-- Gmail -->
+          <div class="app-icon-tile" title="Gmail Integration">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path fill="#EA4335" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/>
+              <path fill="#FBBC05" d="M12 13L2 6.5V6l10 6.5L22 6v.5L12 13z"/>
+              <path fill="#34A853" d="M22 6.5L12 13 2 6.5V18h20V6.5z"/>
+            </svg>
+          </div>
+          <!-- Slack -->
+          <div class="app-icon-tile" title="Slack Notifications">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path fill="#E01E5A" d="M6 15a2 2 0 1 1-2-2h2v2zm1 0a2 2 0 1 1 2 2V13H7v2z"/>
+              <path fill="#36C5F0" d="M9 6a2 2 0 1 1 2-2v2H9zm0 1a2 2 0 1 1-2 2h2V7z"/>
+              <path fill="#2EB67D" d="M18 9a2 2 0 1 1 2 2h-2V9zm-1 0a2 2 0 1 1-2-2v2h2v0z"/>
+              <path fill="#ECB22E" d="M15 18a2 2 0 1 1-2 2v-2h2zm0-1a2 2 0 1 1 2-2h-2v2z"/>
+            </svg>
+          </div>
+          <!-- Google Calendar -->
+          <div class="app-icon-tile" title="Google Calendar Sync">
+            <div style="background:#2563EB;color:#FFF;font-size:0.75rem;font-weight:900;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              31
+            </div>
+          </div>
+          <!-- Google Scholar -->
+          <div class="app-icon-tile" title="Scholar Citation Sync">
+            <span style="font-size:1.25rem;">🎓</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       PROOF SECTION / UNIVERSITY LOGOS
+       ========================================================================== -->
+  <section class="proof-section">
+    <div class="proof-container">
+      <p class="proof-heading">Connecting with top academic institutions &amp; global foundations</p>
+      <div class="proof-logos-wrap">
+        <div class="uni-pill-logo"><div class="uni-badge-circle" style="background:#002147;">OX</div> Oxford University</div>
+        <div class="uni-pill-logo"><div class="uni-badge-circle" style="background:#A31F34;">CB</div> Cambridge University</div>
+        <div class="uni-pill-logo"><div class="uni-badge-circle" style="background:#003B5C;">UCL</div> University College London</div>
+        <div class="uni-pill-logo"><div class="uni-badge-circle" style="background:#8C1515;">ST</div> Stanford Law School</div>
+        <div class="uni-pill-logo"><div class="uni-badge-circle" style="background:#003580;">CH</div> Chevening Trust</div>
+        <div class="uni-pill-logo"><div class="uni-badge-circle" style="background:#002663;">DA</div> DAAD Germany</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       INTERACTIVE PRODUCT SHOWCASE SECTION
+       ========================================================================== -->
+  <section class="showcase-section" id="demo">
+    <div class="section-header-center">
+      <div class="section-pill-badge">Interactive Workspace</div>
+      <h2 class="section-title-large">Engineered specifically for academic researchers</h2>
+      <p class="section-desc-muted">Explore how ScholarFlow consolidates discovery, email composition, and scholarship tracking into a single command center.</p>
+    </div>
+
+    <!-- Tab Buttons -->
+    <div class="showcase-tabs-nav">
+      <button class="showcase-tab-btn active" onclick="switchShowcaseTab(0)">🧠 AI Professor Search</button>
+      <button class="showcase-tab-btn" onclick="switchShowcaseTab(1)">✉️ Precision Composer</button>
+      <button class="showcase-tab-btn" onclick="switchShowcaseTab(2)">🎓 Scholarship Intelligence</button>
+      <button class="showcase-tab-btn" onclick="switchShowcaseTab(3)">⏰ Urgency Matrix</button>
+    </div>
+
+    <!-- Mockup Frame -->
+    <div class="showcase-stage-mockup">
+      <div class="mockup-window-bar">
+        <div class="window-dot r"></div>
+        <div class="window-dot y"></div>
+        <div class="window-dot g"></div>
+        <div class="window-url-pill">scholarflow.app/workspace/outreach</div>
+      </div>
+
+      <div class="mockup-content-body">
+        <!-- Tab 0: AI Search Mockup -->
+        <div class="tab-content-panel active" id="tab-panel-0">
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:2rem;align-items:center;">
+            <div>
+              <span style="font-size:0.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;">Semantic Matching</span>
+              <h3 style="font-size:1.5rem;font-weight:800;color:var(--text-main);margin:0.4rem 0 0.8rem;">Instant Multi-Factor Alignment</h3>
+              <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.5rem;">
+                Match your research synopsis with 232 verified professors across UK, USA, EU, and Asian universities. Scored across publications, citations, and funding capacity.
+              </p>
+              <a href="index.html" class="hero-cta-btn" style="padding:0.65rem 1.5rem;font-size:0.88rem;">Open Live Search →</a>
+            </div>
+            <div style="background:var(--bg);border-radius:14px;border:1px solid var(--border);padding:1.5rem;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <span style="font-size:0.85rem;font-weight:700;">Query: "Environmental & Climate Governance"</span>
+                <span style="font-size:0.75rem;background:#DCFCE7;color:#16A34A;padding:3px 8px;border-radius:6px;font-weight:700;">98% Match</span>
+              </div>
+              <div style="background:#FFFFFF;border-radius:10px;padding:1rem;border:1px solid var(--border);margin-bottom:0.75rem;">
+                <div style="font-size:0.92rem;font-weight:700;color:var(--text-main);">Prof. Lavanya Rajamani</div>
+                <div style="font-size:0.78rem;color:var(--text-muted);">University of Oxford · Public International Law</div>
+                <div style="font-size:0.75rem;color:var(--primary);margin-top:0.4rem;font-weight:600;">⭐ Super Standout Match · 14 Relevant Publications</div>
+              </div>
+              <div style="background:#FFFFFF;border-radius:10px;padding:1rem;border:1px solid var(--border);">
+                <div style="font-size:0.92rem;font-weight:700;color:var(--text-main);">Prof. Jorge E. Viñuales</div>
+                <div style="font-size:0.78rem;color:var(--text-muted);">University of Cambridge · Environmental Law & Policy</div>
+                <div style="font-size:0.75rem;color:#10B981;margin-top:0.4rem;font-weight:600;">⭐ Tier 1 Priority · Active Lab Openings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 1: Composer Mockup -->
+        <div class="tab-content-panel" id="tab-panel-1">
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:2rem;align-items:center;">
+            <div>
+              <span style="font-size:0.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;">AI Outreach Engine</span>
+              <h3 style="font-size:1.5rem;font-weight:800;color:var(--text-main);margin:0.4rem 0 0.8rem;">Grounded In Your Proposal</h3>
+              <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.5rem;">
+                Generate customized academic emails that reference the professor's latest articles and directly tie into your research proposal.
+              </p>
+              <a href="index.html" class="hero-cta-btn" style="padding:0.65rem 1.5rem;font-size:0.88rem;">Try Composer →</a>
+            </div>
+            <div style="background:var(--bg);border-radius:14px;border:1px solid var(--border);padding:1.5rem;">
+              <div style="font-size:0.78rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;">Subject: Prospective DPhil Research: Transnational Environmental Governance & Customary Law</div>
+              <div style="background:#FFFFFF;border-radius:10px;padding:1.25rem;border:1px solid var(--border);font-size:0.85rem;color:var(--text-main);line-height:1.6;">
+                Dear Professor Rajamani,<br><br>
+                I have followed your groundbreaking analysis on the Paris Agreement compliance mechanisms with great admiration... Having prepared a research proposal analyzing customary environmental obligations in South Asia, I would be honored to discuss potential doctoral supervision...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Scholarship Mockup -->
+        <div class="tab-content-panel" id="tab-panel-2">
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:2rem;align-items:center;">
+            <div>
+              <span style="font-size:0.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;">Verified Grants Directory</span>
+              <h3 style="font-size:1.5rem;font-weight:800;color:var(--text-main);margin:0.4rem 0 0.8rem;">54+ Fully-Funded Awards</h3>
+              <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.5rem;">
+                Full eligibility checklists, stipend amounts, document requirements, and country discovery wizards for UK, USA, Germany, Japan, and Canada.
+              </p>
+              <a href="index.html" class="hero-cta-btn" style="padding:0.65rem 1.5rem;font-size:0.88rem;">Explore Scholarships →</a>
+            </div>
+            <div style="background:var(--bg);border-radius:14px;border:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:0.75rem;">
+              <div style="background:#FFFFFF;border-radius:10px;padding:1rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-size:0.92rem;font-weight:700;">🇬🇧 Chevening Scholarship 2026</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Full Tuition + £1,400/mo Stipend + Airfare</div>
+                </div>
+                <span style="font-size:0.75rem;background:#FEE2E2;color:#DC2626;padding:4px 8px;border-radius:6px;font-weight:800;">8 Days Left</span>
+              </div>
+              <div style="background:#FFFFFF;border-radius:10px;padding:1rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-size:0.92rem;font-weight:700;">🇩🇪 DAAD Research Grant</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">€1,300/mo + Health Insurance + Travel Allowance</div>
+                </div>
+                <span style="font-size:0.75rem;background:#DCFCE7;color:#16A34A;padding:4px 8px;border-radius:6px;font-weight:800;">Eligible 100%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Urgency Matrix Mockup -->
+        <div class="tab-content-panel" id="tab-panel-3">
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:2rem;align-items:center;">
+            <div>
+              <span style="font-size:0.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;">Deadline Management</span>
+              <h3 style="font-size:1.5rem;font-weight:800;color:var(--text-main);margin:0.4rem 0 0.8rem;">Never Miss A Cutoff</h3>
+              <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.5rem;">
+                Visual urgency classification (Urgent, Approaching, Rolling) with one-click export to Google Calendar and Apple .ICS formats.
+              </p>
+              <a href="index.html" class="hero-cta-btn" style="padding:0.65rem 1.5rem;font-size:0.88rem;">View Deadline Matrix →</a>
+            </div>
+            <div style="background:var(--bg);border-radius:14px;border:1px solid var(--border);padding:1.5rem;">
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;text-align:center;">
+                <div style="background:#FFFFFF;border-radius:10px;padding:1.25rem 0.5rem;border:1px solid var(--border);">
+                  <div style="font-size:1.8rem;font-weight:800;color:#DC2626;">4</div>
+                  <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);margin-top:0.2rem;">Urgent (≤14d)</div>
+                </div>
+                <div style="background:#FFFFFF;border-radius:10px;padding:1.25rem 0.5rem;border:1px solid var(--border);">
+                  <div style="font-size:1.8rem;font-weight:800;color:#D97706;">11</div>
+                  <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);margin-top:0.2rem;">Approaching</div>
+                </div>
+                <div style="background:#FFFFFF;border-radius:10px;padding:1.25rem 0.5rem;border:1px solid var(--border);">
+                  <div style="font-size:1.8rem;font-weight:800;color:#16A34A;">21</div>
+                  <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);margin-top:0.2rem;">On Schedule</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       6-FEATURE CLEAN GRID
+       ========================================================================== -->
+  <section class="features-grid-section" id="features">
+    <div class="features-container">
+      <div class="section-header-center">
+        <div class="section-pill-badge">Platform Capabilities</div>
+        <h2 class="section-title-large">Designed to accelerate every phase of academic outreach</h2>
+        <p class="section-desc-muted">Everything you need to secure doctoral supervision and major international scholarships.</p>
+      </div>
+
+      <div class="grid-3col">
+        <!-- Feature 1 -->
+        <div class="feature-clean-card">
+          <div class="f-icon-box" style="background:#EFF6FF;color:#2563EB;">🧠</div>
+          <h3 class="f-card-title">AI Scholar Discovery</h3>
+          <p class="f-card-desc">Search 232 verified professors with weighted keyword matching across research clusters, faculty affiliations, and recent literature.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-clean-card">
+          <div class="f-icon-box" style="background:#FEF3C7;color:#D97706;">✍️</div>
+          <h3 class="f-card-title">Nexus Email Composer</h3>
+          <p class="f-card-desc">Ground every outreach email in your 2 registered proposals. Automatically matches academic keywords to boost reply rates.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-clean-card">
+          <div class="f-icon-box" style="background:#DCFCE7;color:#16A34A;">🎓</div>
+          <h3 class="f-card-title">54+ Verified Scholarships</h3>
+          <p class="f-card-desc">Primary-source verified awards across 18 countries with full funding breakdowns, document checklists, and eligibility rules.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-clean-card">
+          <div class="f-icon-box" style="background:#FFE4E6;color:#E11D48;">⏰</div>
+          <h3 class="f-card-title">Smart Deadline Ledger</h3>
+          <p class="f-card-desc">Tracks rolling and hard deadlines with urgency badges, customizable reminders, and automated calendar export.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-clean-card">
+          <div class="f-icon-box" style="background:#EDE9FE;color:#7C3AED;">📊</div>
+          <h3 class="f-card-title">7-Stage Kanban Pipeline</h3>
+          <p class="f-card-desc">Move candidates smoothly from Initial Research to Contacted, Replied, Interview, and Offer with visual engagement meters.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-clean-card">
+          <div class="f-icon-box" style="background:#E0F2FE;color:#0284C7;">🔒</div>
+          <h3 class="f-card-title">Local-First Privacy</h3>
+          <p class="f-card-desc">Your research drafts, notes, and correspondence stay 100% private in local storage with one-click JSON backup and restore.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       INTERACTIVE SCHOLARSHIP CALCULATOR / LIVE DEMO
+       ========================================================================== -->
+  <section class="demo-widget-section" id="scholarships">
+    <div class="demo-calc-card">
+      <div class="calc-grid">
+        <div>
+          <div class="section-pill-badge">Interactive Tool</div>
+          <h2 style="font-size:2rem;font-weight:800;color:var(--text-main);line-height:1.2;margin:0.5rem 0 1rem;">
+            Instant Scholarship Match Calculator
+          </h2>
+          <p style="font-size:0.92rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.75rem;">
+            Select your target degree level, country preference, and field of study to discover active fully-funded opportunities in our database.
+          </p>
+
+          <div class="calc-input-group">
+            <label class="calc-label">Target Degree</label>
+            <select class="calc-select" id="calcDegree" onchange="calculateMatches()">
+              <option value="phd">PhD / Doctoral</option>
+              <option value="msc">Master's / LL.M</option>
+              <option value="postdoc">Postdoctoral Fellowship</option>
+            </select>
+          </div>
+
+          <div class="calc-input-group">
+            <label class="calc-label">Target Destination</label>
+            <select class="calc-select" id="calcCountry" onchange="calculateMatches()">
+              <option value="all">Global (All Countries)</option>
+              <option value="uk">United Kingdom (Oxford, Cambridge, Russell Group)</option>
+              <option value="usa">United States (Fulbright, Ivy League)</option>
+              <option value="eu">European Union (DAAD, Erasmus, Marie Curie)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="calc-result-box">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#94A3B8;letter-spacing:0.08em;">Matching Opportunities</span>
+          <div class="calc-result-val" id="matchCount">54</div>
+          <div class="calc-result-sub" id="matchFunding">Total funding capacity: $2.4M+ in grants</div>
+
+          <ul class="calc-result-items">
+            <li><span style="color:#38BDF8;">✓</span> 100% Tuition Waiver Included</li>
+            <li><span style="color:#38BDF8;">✓</span> Monthly Living Stipend &amp; Housing</li>
+            <li><span style="color:#38BDF8;">✓</span> Visa &amp; International Airfare Covered</li>
+          </ul>
+
+          <a href="index.html" class="hero-cta-btn" style="width:100%;justify-content:center;margin-top:1.5rem;padding:0.8rem;">
+            Explore Matching Grants →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       PRICING TIERS
+       ========================================================================== -->
+  <section class="pricing-section" id="pricing">
+    <div class="pricing-container">
+      <div class="section-header-center">
+        <div class="section-pill-badge">Transparent Plans</div>
+        <h2 class="section-title-large">Start free, upgrade as you scale</h2>
+        <p class="section-desc-muted">Choose the right tier for your academic research and application timeline.</p>
+      </div>
+
+      <div class="pricing-cards-grid">
+        <!-- Tier 1: Free -->
+        <div class="pricing-box">
+          <div class="p-tier-name">Free Explorer</div>
+          <div class="p-price-amount">$0<span>/forever</span></div>
+          <p class="p-tier-desc">Ideal for initial browsing of professor databases and organizing preliminary notes.</p>
+          <ul class="p-features-list">
+            <li><span class="p-check-bullet">✓</span> 232 Verified Professor Profiles</li>
+            <li><span class="p-check-bullet">✓</span> Basic Pipeline Kanban Tracking</li>
+            <li><span class="p-check-bullet">✓</span> 5 Core Scholarship Previews</li>
+            <li><span class="p-check-bullet">✓</span> Local Storage Data Security</li>
+          </ul>
+          <a href="index.html" class="p-cta-btn p-btn-secondary">Get Started Free</a>
+        </div>
+
+        <!-- Tier 2: Pro (Featured) -->
+        <div class="pricing-box featured">
+          <div class="featured-ribbon">Most Popular</div>
+          <div class="p-tier-name">Pro Researcher</div>
+          <div class="p-price-amount">$29<span>/month</span></div>
+          <p class="p-tier-desc">Complete academic intelligence suite for serious PhD and fellowship candidates.</p>
+          <ul class="p-features-list">
+            <li><span class="p-check-bullet">✓</span> Everything in Free Explorer</li>
+            <li><span class="p-check-bullet">✓</span> Unlimited AI Scholar Search</li>
+            <li><span class="p-check-bullet">✓</span> AI Correspondence Composer</li>
+            <li><span class="p-check-bullet">✓</span> All 54+ Verified Scholarships</li>
+            <li><span class="p-check-bullet">✓</span> 12-Factor Profile Matchmaker</li>
+            <li><span class="p-check-bullet">✓</span> Calendar &amp; .ICS Export</li>
+          </ul>
+          <a href="index.html" class="p-cta-btn p-btn-primary">⚡ Upgrade to Pro</a>
+        </div>
+
+        <!-- Tier 3: Lab / Institution -->
+        <div class="pricing-box">
+          <div class="p-tier-name">Lab &amp; Institution</div>
+          <div class="p-price-amount">$79<span>/month</span></div>
+          <p class="p-tier-desc">For research labs, university advising centers, and academic teams.</p>
+          <ul class="p-features-list">
+            <li><span class="p-check-bullet">✓</span> Everything in Pro Researcher</li>
+            <li><span class="p-check-bullet">✓</span> Up to 10 Researcher Seats</li>
+            <li><span class="p-check-bullet">✓</span> Shared Outreach Pipelines</li>
+            <li><span class="p-check-bullet">✓</span> Dedicated Account Manager</li>
+            <li><span class="p-check-bullet">✓</span> Priority AI Search Queue</li>
+          </ul>
+          <a href="index.html" class="p-cta-btn p-btn-secondary">Contact Support</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       CONVERSION CALL TO ACTION
+       ========================================================================== -->
+  <section class="conversion-cta-wrap">
+    <div class="cta-banner-box">
+      <h2>Ready to take command of your academic future?</h2>
+      <p>Join researchers worldwide who use ScholarFlow to connect with the right supervisors, submit winning proposals, and secure funded opportunities.</p>
+      <a href="index.html" class="hero-cta-btn" style="background:#3B82F6;color:#FFF;padding:1rem 2.8rem;font-size:1.1rem;">
+        Launch ScholarFlow Dashboard →
+      </a>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="footer-clean">
+    <div class="footer-inner-grid">
+      <div class="footer-brand-bio">
+        <a href="landing.html" class="nav-brand">
+          <div class="brand-icon-matrix">
+            <div class="matrix-dot active"></div>
+            <div class="matrix-dot"></div>
+            <div class="matrix-dot"></div>
+            <div class="matrix-dot"></div>
+          </div>
+          <span class="brand-text">Scholar<span>Flow</span></span>
+        </a>
+        <p>The all-in-one academic intelligence and outreach platform for ambitious doctoral candidates navigating global academia.</p>
+      </div>
+
+      <div>
+        <div class="footer-col-header">Platform</div>
+        <ul class="footer-links-list">
+          <li><a href="index.html">Live Dashboard</a></li>
+          <li><a href="index.html">AI Scholar Search</a></li>
+          <li><a href="index.html">Correspondence Composer</a></li>
+          <li><a href="index.html">Scholarship Directory</a></li>
+          <li><a href="index.html">Deadline Tracker</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-header">Target Regions</div>
+        <ul class="footer-links-list">
+          <li><a href="index.html">United Kingdom (Oxford/Cambridge)</a></li>
+          <li><a href="index.html">United States (Ivy League)</a></li>
+          <li><a href="index.html">Germany (DAAD/Max Planck)</a></li>
+          <li><a href="index.html">European Union Fellowships</a></li>
+          <li><a href="index.html">Asia-Pacific Research Hubs</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-header">Author &amp; Support</div>
+        <ul class="footer-links-list">
+          <li><a href="mailto:tusher.law@gmail.com">tusher.law@gmail.com</a></li>
+          <li><a href="index.html">Tanvir Ahmed Tusher</a></li>
+          <li><a href="index.html">Privacy &amp; Security</a></li>
+          <li><a href="index.html">Passkey Sign-In</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-sub-bar">
+      <span>© 2026 ScholarFlow · Developed by Tanvir Ahmed Tusher · All rights reserved.</span>
+      <span style="display:flex;align-items:center;gap:0.4rem;color:#10B981;font-weight:600;font-size:0.78rem;">
+        <span style="width:8px;height:8px;border-radius:50%;background:#10B981;box-shadow:0 0 6px #10B981;"></span>
+        All Systems Operational
+      </span>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       SCRIPTS FOR INTERACTIVE SHOWCASE & CALCULATOR
+       ========================================================================== -->
+  <script>
+    // Tab switcher in interactive showcase
+    function switchShowcaseTab(index) {
+      const tabBtns = document.querySelectorAll('.showcase-tab-btn');
+      const tabPanels = document.querySelectorAll('.tab-content-panel');
+
+      tabBtns.forEach((btn, idx) => {
+        if (idx === index) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      tabPanels.forEach((panel, idx) => {
+        if (idx === index) {
+          panel.classList.add('active');
+        } else {
+          panel.classList.remove('active');
+        }
+      });
+    }
+
+    // Dynamic Scholarship Match Calculator
+    function calculateMatches() {
+      const degree = document.getElementById('calcDegree').value;
+      const country = document.getElementById('calcCountry').value;
+      const countEl = document.getElementById('matchCount');
+      const fundingEl = document.getElementById('matchFunding');
+
+      let matches = 54;
+      let funding = "$2.4M+ in grants";
+
+      if (degree === 'phd') {
+        if (country === 'uk') { matches = 24; funding = "£1.2M+ in UK doctoral stipends"; }
+        else if (country === 'usa') { matches = 18; funding = "$1.1M+ in US fellowships"; }
+        else if (country === 'eu') { matches = 16; funding = "€950k+ in EU research grants"; }
+        else { matches = 54; funding = "$2.4M+ in global awards"; }
+      } else if (degree === 'msc') {
+        if (country === 'uk') { matches = 14; funding = "£650k+ in Chevening & Commonwealth"; }
+        else if (country === 'usa') { matches = 10; funding = "$500k+ in Fulbright awards"; }
+        else if (country === 'eu') { matches = 12; funding = "€600k+ in DAAD & Erasmus"; }
+        else { matches = 36; funding = "$1.7M+ in master's funding"; }
+      } else {
+        matches = 8; funding = "$600k+ in postdoc awards";
+      }
+
+      countEl.textContent = matches;
+      fundingEl.textContent = "Total funding capacity: " + funding;
+    }
+
+    // Nav shadow on scroll
+    const navBar = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 30) {
+        navBar.style.boxShadow = '0 4px 20px rgba(15, 23, 42, 0.06)';
+      } else {
+        navBar.style.boxShadow = 'none';
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>
